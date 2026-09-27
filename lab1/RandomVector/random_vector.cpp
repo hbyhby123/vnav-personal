@@ -1,6 +1,5 @@
 #include "random_vector.h"
 #include <cstdlib>
-#include <algorithm>
 
 
 RandomVector::RandomVector(int size, double max_val)
@@ -38,13 +37,33 @@ double RandomVector::mean()
 
 double RandomVector::max()
 {
-    return *std::max_element(vect.begin(), vect.end());
+    double max_value = vect[0];
+
+    for(double v : vect)
+    {
+        if(v > max_value)
+        {
+            max_value = v;
+        }
+    }
+
+    return max_value;
 }
 
 
 double RandomVector::min()
 {
-    return *std::min_element(vect.begin(), vect.end());
+    double min_value = vect[0];
+
+    for(double v : vect)
+    {
+        if(v < min_value)
+        {
+            min_value = v;
+        }
+    }
+
+    return min_value;
 }
 
 
