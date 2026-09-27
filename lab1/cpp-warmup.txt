@@ -1,0 +1,67 @@
+C++ Warm-up Exercises Answers
+
+Operators
+
+1.
+After:
+j = ++i;
+i becomes 1 and j becomes 1.
+After:
+j = i++;
+j becomes 1 and i becomes 2.
+
+2.
+The program prints:
+b
+
+
+References and Pointers
+
+1.
+The program prints:
+10 10
+
+Because ri is a reference to i.
+
+2.
+The program prints:
+1764
+
+Because *j = 42 * 42.
+
+3.
+The program prints:
+0
+
+Because *(i+2)=*(i+1)-i[3]=24-24=0.
+
+4.
+The program prints:
+0
+
+Because reset changes j through reference.
+
+
+Numbers
+
+1.
+int, short, long and long long are different integer types with different storage sizes and value ranges.
+
+2.
+float has lower precision than double.
+The value of i is:
+3
+
+because 3.14 is converted to integer.
+
+3.
+Signed types can represent positive and negative values.
+Unsigned types only represent non-negative values.
+For 8-bit unsigned char:
+c = 255
+
+4.
+The value of i is:
+0
+
+Because 42 is true, so the if branch is executed.
