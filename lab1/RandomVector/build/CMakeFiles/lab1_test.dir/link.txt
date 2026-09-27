@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/lab1_test.dir/main.cpp.o CMakeFiles/lab1_test.dir/random_vector.cpp.o  -o lab1_test 

@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hby/lab1_ws/VNAV-labs/lab1/main.cpp
+cstdlib
+-
+iostream
+-
+random_vector.h
+/home/hby/lab1_ws/VNAV-labs/lab1/random_vector.h
+
+/home/hby/lab1_ws/VNAV-labs/lab1/random_vector.cpp
+random_vector.h
+/home/hby/lab1_ws/VNAV-labs/lab1/random_vector.h
+cstdlib
+-
+algorithm
+-
+
+/home/hby/lab1_ws/VNAV-labs/lab1/random_vector.h
+iostream
+-
+vector
+-
+
