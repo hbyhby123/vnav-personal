@@ -69,28 +69,45 @@ double RandomVector::min()
 
 void RandomVector::printHistogram(int bins)
 {
-    std::vector<int> histogram(bins,0);
+    if (bins <= 0 || vect.empty())
+        return;
 
-    for(double v : vect)
+    double low = min();
+    double high = max();
+    std::vector<int> histogram(bins, 0);
+
+    for (double v : vect)
     {
-        int index = v * bins;
-
-        if(index >= bins)
-            index = bins - 1;
-
+        int index = 0;
+        if (high > low)
+        {
+            index = static_cast<int>(
+                (v - low) / (high - low) * bins);
+            if (index >= bins)
+                index = bins - 1;
+        }
         histogram[index]++;
     }
 
-
-    for(int i = 0; i < bins; i++)
+    int height = 0;
+    for (int count : histogram)
     {
-        std::cout << i << ": ";
+        if (count > height)
+            height = count;
+    }
 
-        for(int j = 0; j < histogram[i]; j++)
+    for (int row = height; row > 0; row--)
+    {
+        for (int i = 0; i < bins; i++)
         {
-            std::cout << "*";
-        }
+            if (histogram[i] >= row)
+                std::cout << "***";
+            else
+                std::cout << "   ";
 
+            if (i < bins - 1)
+                std::cout << " ";
+        }
         std::cout << std::endl;
     }
 }
