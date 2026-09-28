@@ -417,5 +417,3 @@ $$
 2. [MIT VNAV 2023 — Introduction to ROS](https://vnav.mit.edu/labs_2023/lab2/ros101.html)
 3. [MIT VNAV 2023 — Lab 2 Exercises](https://vnav.mit.edu/labs_2023/lab2/exercises.html)
 4. [MIT-SPARK/VNAV-labs ROS 1 源码基线](https://github.com/MIT-SPARK/VNAV-labs/tree/609f31fec484daafef6207ce283d23b424a2072f/lab2/two_drones_pkg)
-
-报告根据实验聊天记录、终端实际输出、7张截图及已提交源码整理；文字和推导由 AI 辅助编写，实验操作由本人在 ubuntu2004 上完成。
