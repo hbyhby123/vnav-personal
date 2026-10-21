@@ -11,7 +11,7 @@
 | 编译8个ROS包 | 已成功 |
 | 下载TESSE仿真器lab3.zip | 正在下载，等100%并出现终端提示符 |
 | 启动仿真器、桥接、RViz | 接下来做 |
-| 补全控制器、悬停和绕圆 | 尚未完成 |
+| 补全控制器、悬停和绕圆 | 已提供实现与安装脚本；待Ubuntu编译和试飞 |
 | 理论题、视频和最终报告 | 后续完成 |
 
 记住：编译通过只说明程序能构建。原始controller_node.cpp里还有待填代码，不能把“编译成功”当作“无人机已完成绕圆”。
@@ -95,7 +95,7 @@ chmod +x lab3.x86_64
 
 成功标志：弹出Unity窗口，看到无人机。这个终端保持打开。
 
-截图03：TESSE仿真器初始场景。现在无人机不飞很正常，控制器还没补完。
+截图03：TESSE仿真器初始场景。现在无人机不飞很正常，控制器尚未安装或启动时不会受控飞行。
 
 仿真器按键：W开启旋翼，R重置无人机位置。重置前先在控制器终端按Ctrl+C停掉控制器。
 
@@ -126,33 +126,25 @@ rviz -d rviz/lab3.rviz
 
 截图04：RViz坐标系与状态。若RViz黑屏或显示红色错误，截完整界面发我。
 
-## 六、补全控制器：这一步不能省
+## 六、控制器已补好：下载替换并编译
 
-原始文件是：~/vnav_ws/src/controller_pkg/src/controller_node.cpp。
+详细小白教程：[第六步：补全控制器与悬停操作](06_补全控制器与悬停操作.md)。已提供对应VNAV2021的完整控制器实现，尚待你的Ubuntu编译与TESSE试飞。
 
-代码要做的事情只有这一条主线：
-
-期望位置和实际位置 → 算误差 → 算需要的力与力矩 → 分配给四个旋翼 → 发转速命令。
-
-待补全的内容包括：订阅期望/当前状态，读取状态，计算位置和姿态误差，计算推力与力矩，按旋翼编号分配转速并发布。转速单位是rad/s。当前角速度要按代码要求从世界系转到机体系。仿真器允许有符号转速，应按原始代码要求处理。
-
-我已拿到公开原始代码，不用重复上传。到这一步时，把仿真器和RViz的结果发来，我会继续给你对应版本的代码修改与替换步骤。此指南还没有包含完整控制器实现，不能跳过这一步直接认定飞行成功。
-
-替换前先备份：
+若旧控制器正在运行，先在它的终端按Ctrl+C。然后新开Ubuntu终端：
 
 ```bash
-cp ~/vnav_ws/src/controller_pkg/src/controller_node.cpp ~/lab3_evidence/controller_node_original.cpp
+mkdir -p ~/lab3_evidence
+wget -O ~/lab3_evidence/install_controller.sh https://raw.githubusercontent.com/hbyhby123/vnav-personal/master/lab3/scripts/install_controller.sh
 ```
 
-每次修改C++源码后都编译：
+只有下载成功后才运行：
 
 ```bash
-cd ~/vnav_ws
-catkin build
+bash ~/lab3_evidence/install_controller.sh
 source ~/vnav_ws/devel/setup.bash
 ```
 
-成功标志：Summary显示全部成功，Failed为None。截图05。
+脚本会备份原包、替换3个文件并编译。Summary全部成功后截05。默认已设为悬停模式；接着按第七节启动，不用重复改STATIC_POSE。初始增益kx=6、kv=4、kr=30、komega=10，需要实际飞行确认。运行脚本会把轨迹模式重设为悬停，因此不要在完成调参和绕圆后无故重复安装。
 
 ## 七、先定点悬停，再绕圆
 
@@ -218,7 +210,7 @@ roslaunch controller_pkg traj_tracking.launch
 | kr | 机身姿态偏离目标时，纠正的力度 |
 | komega | 旋转速度误差反馈，也帮助抑制转动振荡 |
 
-默认四个值都是1，不能保证已经合适。先检查公式、坐标和转子顺序，再调增益。一次只改一项，记录“旧值、新值、现象”。仅修改launch参数时，保存并重启终端D即可；修改C++后才需要重新编译。
+原始版本四个值都是1；本次实现的初始值为kx=6、kv=4、kr=30、komega=10，不能保证在实际仿真中已经合适。先检查公式、坐标和转子顺序，再调增益。一次只改一项，记录“旧值、新值、现象”。仅修改launch参数时，保存并重启终端D即可；修改C++后才需要重新编译。
 
 ## 八、录视频、数据，保存最终代码
 
@@ -351,4 +343,3 @@ ls ~/vnav_ws/src
 - 你使用的源码版本：https://github.com/MIT-SPARK/VNAV-labs/releases/tag/VNAV2021
 - 仿真器下载：https://vnav.mit.edu/material/lab3.zip
 - 几何控制参考：Lee等，Geometric tracking control of a quadrotor UAV on SE (3)，CDC 2010。
-
