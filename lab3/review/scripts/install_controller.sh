@@ -9,7 +9,7 @@ if [ ! -f "$package_dir/package.xml" ]; then
 fi
 mkdir -p "$evidence_dir"
 stage_dir=$(mktemp -d "$evidence_dir/controller_download.XXXXXX")
-base_url="https://raw.githubusercontent.com/hbyhby123/vnav-personal/master/lab3/controller_pkg"
+base_url="https://raw.githubusercontent.com/hbyhby123/vnav-personal/master/lab3/code/controller_pkg"
 for relative_path in src/controller_node.cpp src/traj_publisher.cpp launch/traj_tracking.launch; do
   mkdir -p "$stage_dir/$(dirname "$relative_path")"
   wget --timeout=30 --tries=3 -O "$stage_dir/$relative_path" "$base_url/$relative_path"
