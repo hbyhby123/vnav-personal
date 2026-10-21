@@ -1,7 +1,7 @@
 <launch>
   <!-- Initial gains; validate and tune in the actual TESSE simulator. -->
-  <arg name="kx" default="6.0"/>
-  <arg name="kv" default="4.0"/>
+  <arg name="kx" default="2.0"/>
+  <arg name="kv" default="3.0"/>
   <arg name="kr" default="3.0"/>
   <arg name="komega" default="1.0"/>
   <param name="kx" value="$(arg kx)" type="double"/>
