@@ -1,0 +1,17 @@
+[
+  {
+    "filename": "circle_tracking_20261021_081755.bag",
+    "bytes": 3430343,
+    "sha256": "803fa4007e17c51b3702a865cb3ca23d32f211d8133ab9f162a7e0daafcfe5b1"
+  },
+  {
+    "filename": "parameters_20261021_081755.txt",
+    "bytes": 32,
+    "sha256": "0a02bcf01fdb189d4a814778c4e68516a6f7a1477ac4c04b62fa2b239c07e40a"
+  },
+  {
+    "filename": "V01_RViz_circle_20261021_081755.mp4",
+    "bytes": 9420691,
+    "sha256": "d4a093a1fdd6253c2e222ee8f188fb63adf390bfad1303674ea44e689eca8e6c"
+  }
+]
