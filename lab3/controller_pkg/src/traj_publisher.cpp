@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#define STATIC_POSE 1
+#define STATIC_POSE 0
 
 #define PI M_PI
 

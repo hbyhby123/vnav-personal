@@ -21,6 +21,8 @@ printf 'Original controller package backed up to: %s\n' "$backup_dir/controller_
 for relative_path in src/controller_node.cpp src/traj_publisher.cpp launch/traj_tracking.launch; do
   cp "$stage_dir/$relative_path" "$package_dir/$relative_path"
 done
+# A new installation always begins with hover, even when the archived package uses circle mode.
+sed -i 's/^#define STATIC_POSE .*/#define STATIC_POSE 1/' "$package_dir/src/traj_publisher.cpp"
 source /opt/ros/noetic/setup.bash
 cd "$HOME/vnav_ws"
 catkin build 2>&1 | tee "$evidence_dir/build_controller.log"

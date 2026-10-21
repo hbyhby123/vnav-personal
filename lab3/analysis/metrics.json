@@ -1,0 +1,48 @@
+{
+  "topics": [
+    {
+      "topic": "/current_state",
+      "type": "nav_msgs/msg/Odometry",
+      "count": 2235
+    },
+    {
+      "topic": "/clock",
+      "type": "rosgraph_msgs/msg/Clock",
+      "count": 2203
+    },
+    {
+      "topic": "/desired_state",
+      "type": "trajectory_msgs/msg/MultiDOFJointTrajectoryPoint",
+      "count": 4404
+    },
+    {
+      "topic": "/rotor_speed_cmds",
+      "type": "mav_msgs/msg/Actuators",
+      "count": 4404
+    }
+  ],
+  "time_basis": "state header stamp; desired bag receipt ROS timestamp; linear interpolation; all common-time samples",
+  "start_ros_s": 933.72,
+  "end_ros_s": 978.36,
+  "duration_s": 44.639999999999986,
+  "samples": 2233,
+  "rmse_xyz_m": [
+    0.06308562405382795,
+    0.06322268796626233,
+    0.05561531601654967
+  ],
+  "rmse_position_m": 0.10521391358352265,
+  "mean_position_error_m": 0.1049010357635636,
+  "max_position_error_m": 0.1165955393373541,
+  "p95_position_error_m": 0.1133708735158011,
+  "mean_z_m": 1.9445718007165247,
+  "min_z_m": 1.931833,
+  "max_z_m": 1.956974,
+  "mean_radius_m": 5.046559330551512,
+  "radial_rmse_m": 0.046579206014466544,
+  "yaw_rmse_deg": 9.52424470068873,
+  "rotor_min_rad_s": 29.1686252519458,
+  "rotor_max_rad_s": 63.596792037918604,
+  "desired_turns": 3.552338329811103,
+  "actual_turns": 3.552440022402093
+}

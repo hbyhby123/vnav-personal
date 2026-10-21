@@ -1,0 +1,39 @@
+Lab 3 Deliverable 1 - Transformations in Practice
+Name: Huang Boyu / 黄博宇
+Student ID: 24020036026
+Class: 中外计科一班    Team: 8
+
+Required headers:
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/utils.h>
+#include <tf2_eigen/tf2_eigen.h>
+#include <Eigen/Geometry>
+
+A1. geometry_msgs::Quaternion -> existing tf2::Quaternion:
+tf2::fromMsg(quat_msg, quat_tf);
+
+A2. tf2::Quaternion -> new geometry_msgs::Quaternion:
+geometry_msgs::Quaternion quat_msg = tf2::toMsg(quat_tf);
+
+A3. Scalar component (w):
+quat_tf.w();
+
+B1. Extract yaw in one call:
+tf2::getYaw(quat_t);
+
+B2. geometry_msgs::Quaternion -> Eigen 3x3 rotation matrix:
+Eigen::Quaterniond quat_e;
+tf2::fromMsg(quat_msg, quat_e);
+Eigen::Matrix3d R = quat_e.toRotationMatrix();
+
+The two conversion calls are fromMsg and toRotationMatrix.
+The input quaternion is assumed valid and unit length. If it is not,
+normalize quat_e before constructing R, which adds another operation.
+Eigen::Quaterniond constructor argument order is (w,x,y,z); ROS fields
+are named x,y,z,w. fromMsg avoids manually confusing these orders.
+
+References:
+https://github.com/ros/geometry2/blob/noetic-devel/tf2_geometry_msgs/include/tf2_geometry_msgs/tf2_geometry_msgs.h
+https://github.com/ros/geometry2/blob/noetic-devel/tf2_eigen/include/tf2_eigen/tf2_eigen.h
+https://github.com/ros/geometry2/blob/noetic-devel/tf2/include/tf2/utils.h
