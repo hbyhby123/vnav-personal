@@ -1,32 +1,59 @@
-# 最终代码与原始快照
+# 代码总览
 
-## 运行和提交用哪个
+ROS是一套让程序通过消息协作的软件框架；ROS包就是把相关代码和配置放在一起的代码单元。这里保留最终包和原始对照，不把两者混着运行。
 
-| 位置 | 内容 | 怎么用 |
-|---|---|---|
-| **[controller_pkg](controller_pkg/)** | 最终完整ROS包，默认参数2、3、3、1，圆轨迹模式 | 运行和交团队源码只用这份 |
-| [用户上传原始快照](original/用户上传控制器原始快照.tar.gz) | 当时上传的6个代码与配置文件，原默认值6、4、30、10 | 仅作原始记录；实际飞行当时通过命令覆盖为2、3、3、1 |
-| [MIT待补全模板](original/controller_node_VNAV2021_待补全.cpp) | VNAV2021原始控制器模板 | 看11处空白原来是什么，不用于直接飞行 |
-| 原课程源码 | [MIT-SPARK VNAV2021](https://github.com/MIT-SPARK/VNAV-labs/releases/tag/VNAV2021) | 查完整课程基线 |
+## 名词说明
 
-## 三个文件分别做什么
+| **术语** | **大白话解释** |
+| --- | --- |
+| ROS | 让多个程序通过消息协作的软件框架 |
+| 几何控制 | 直接根据机身方向计算姿态纠正动作的方法 |
 
-| 文件 | 通俗作用 | Ubuntu路径 |
-|---|---|---|
-| [controller_node.cpp](controller_pkg/src/controller_node.cpp) | 管怎么飞：读状态、算误差、算力和力矩、发4个转速 | `~/vnav_ws/src/controller_pkg/src/controller_node.cpp` |
-| [traj_publisher.cpp](controller_pkg/src/traj_publisher.cpp) | 管飞到哪：1为悬停，0为圆轨迹 | 同包src目录 |
-| [traj_tracking.launch](controller_pkg/launch/traj_tracking.launch) | 管怎么启动：启动节点并设置增益 | 同包launch目录 |
-| [CMakeLists.txt](controller_pkg/CMakeLists.txt) / [package.xml](controller_pkg/package.xml) | 构建与依赖信息 | 提交时保留 |
-| [lab3.rviz](controller_pkg/rviz/lab3.rviz) | 保存RViz显示配置 | 提交时保留 |
+## 任务内容
 
-## 代码边界
+| **任务名称** | **要解决的问题** | **采用的方法 / 技术** | **预期结果** |
+| --- | --- | --- | --- |
+| 最终控制器 | 让无人机根据目标自动调节旋翼 | 几何控制：直接根据机身方向计算纠正动作 | 悬停并跟踪给定圆轨迹 |
+| 原始对照 | 复习时看清从哪里开始、改了什么 | 保留课程模板与原始上传快照 | 能对照待补全版、原始上传版和最终版 |
 
-| 项目 | 说明 |
-|---|---|
-| 完整性 | 保留整个controller_pkg；不是只交一个cpp |
-| 坐标约定 | ROS的z向上；按课程约定把世界系角速度转为机体系 |
-| 旋翼命令 | rad/s，仿真器支持有符号转速；不直接用于真实无人机 |
-| 简化 | 省略期望角速度和角加速度前馈；没有加入理论题中的阻力补偿 |
-| 修改生效 | 改C++后catkin build并重启；只改launch增益则重启即可 |
-| 复现步骤 | [操作与演示](../review/操作与演示.md) |
-| 返回 | [Lab3首页](../README.md) |
+## 交付文件
+
+| **文件 / 目录** | **作用** | **说明** |
+| --- | --- | --- |
+| [controller_pkg/](controller_pkg/README.md) | 可运行和提交的完整ROS控制器包 | 进入下层查看逐文件清单 |
+| [original/](original/README.md) | 原始待补全模板与学生上传快照 | 进入下层查看逐文件清单 |
+| [README.md](README.md) | 本层任务、文件、输入输出、参数和原理说明 | 说明文件 |
+
+## 核心代码 / 函数
+
+| **函数名 / 代码 / 配置** | **作用** | **通俗说明** |
+| --- | --- | --- |
+| controller_pkg/src/controller_node.cpp | 计算控制命令 | 相当于自动驾驶员 |
+| controller_pkg/src/traj_publisher.cpp | 发布期望状态 | 告诉自动驾驶员飞到哪里 |
+| controller_pkg/launch/traj_tracking.launch | 启动与传参 | 把程序与参数一起安排好 |
+
+## 输入 / 输出
+
+| **输入** | **输出** | **格式 / 示例** |
+| --- | --- | --- |
+| 目标位置、速度、朝向与实际状态 | 4个旋翼角速度 | /desired_state、/current_state → /rotor_speed_cmds |
+| 原始快照 | 供阅读和对比的源码 | original中的cpp与tar.gz压缩归档 |
+
+## 参数说明
+
+| **参数** | **含义** | **默认值** |
+| --- | --- | --- |
+| kx / kv | 位置与速度反馈强度 | 2 / 3 |
+| kr / komega | 姿态与旋转速度反馈强度 | 3 / 1 |
+| STATIC_POSE | 1为悬停，0为圆轨迹 | 最终包为0 |
+
+## 原理通俗讲解
+
+先知道目标与当前状态差了多少，再决定需要怎样倾斜和转向，最后把所需动作分给四个旋翼。快照只用来对照，运行和交团队代码使用controller_pkg整包。
+
+## 阅读导航
+
+| **入口** | **用途** |
+| --- | --- |
+| [Lab3首页](../README.md) | 查看总任务与完成状态 |
+| [完整操作手册](../review/操作与演示.md) | 按实际步骤准备、演示和录制 |
