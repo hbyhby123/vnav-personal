@@ -155,8 +155,8 @@ public:
       //
       // **** FIDDLE WITH THESE! ***
       // Change them in the provided launch file.
-      nh.param("kx", kx, 6.0);
-      nh.param("kv", kv, 4.0);
+      nh.param("kx", kx, 2.0);
+      nh.param("kv", kv, 3.0);
       nh.param("kr", kr, 3.0);
       nh.param("komega", komega, 1.0);
       ROS_INFO("Gain values:\nkx: %f \nkv: %f \nkr: %f \nkomega: %f\n", kx, kv, kr, komega);
