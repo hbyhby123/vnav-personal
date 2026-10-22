@@ -1,0 +1,13 @@
+<launch>
+  <!-- Initial gains; validate and tune in the actual TESSE simulator. -->
+  <arg name="kx" default="6.0"/>
+  <arg name="kv" default="4.0"/>
+  <arg name="kr" default="30.0"/>
+  <arg name="komega" default="10.0"/>
+  <param name="kx" value="$(arg kx)" type="double"/>
+  <param name="kv" value="$(arg kv)" type="double"/>
+  <param name="kr" value="$(arg kr)" type="double"/>
+  <param name="komega" value="$(arg komega)" type="double"/>
+  <node name="traj_publisher" pkg="controller_pkg" type="traj_publisher" output="log"/>
+  <node name="controller_node" pkg="controller_pkg" type="controller_node" output="screen"/>
+</launch>

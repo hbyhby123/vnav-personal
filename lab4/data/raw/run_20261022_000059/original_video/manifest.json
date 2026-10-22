@@ -1,0 +1,24 @@
+{
+  "original_file": "race.mp4",
+  "original_bytes": 149508837,
+  "original_sha256": "1ba4ab6ee212b49c51330d8ca7a6109e9016ed7b3970f70d563bf4c7a0ae49af",
+  "parts": [
+    {
+      "file": "race.mp4.part001",
+      "bytes": 50331648,
+      "sha256": "2f83fedc70281284efa13ecbaefafc6067fbd971c21aa1871d68eb82c1f999af"
+    },
+    {
+      "file": "race.mp4.part002",
+      "bytes": 50331648,
+      "sha256": "1c7d75baf5b162fcaeaa979707622bf72bce9306a02e5bcbc8ac40eae352a6fa"
+    },
+    {
+      "file": "race.mp4.part003",
+      "bytes": 48845541,
+      "sha256": "c9ba537e99e9d3e3fdc5f50650d81cd8879184a015ab0be158f976867dc7f88e"
+    }
+  ],
+  "preview": "../race_preview.mp4",
+  "note": "Preview is recompressed without trimming, speed changes or frame reordering. Reconstruct parts to recover the original exact bytes."
+}

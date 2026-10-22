@@ -1,0 +1,9 @@
+Type: trajectory_msgs/MultiDOFJointTrajectoryPoint
+
+Publishers: 
+ * /trajectory_generation_node (http://ubuntu:32897/)
+
+Subscribers: 
+ * /controller_node (http://ubuntu:44111/)
+
+

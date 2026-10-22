@@ -1,197 +1,151 @@
-# LAB4 无人机控制与竞速：代码补丁、操作与复习
+# Lab4 无人机控制与竞速
 
 ## 项目简介
 
-本项目把赛门位置连成平滑路线，再交给已经完成的Lab3控制器跟随，并提供安装、修复和记录材料的工具。当前交付的是Lab4增量补丁与文档，不包含完整模拟器、最终报告或实测通关成绩。
+本实验把赛门位置连接成平滑飞行轨迹，再由Lab3控制器驱动仿真无人机跟随。已归档首门悬停和一次完整通关的真实代码、截图、视频、bag与离线分析，以及报告和两道个人理论题。
 
-## 当前状态
-
-| **项目** | **真实情况** |
-| --- | --- |
-| 本地目录 | GitHub归档：[hbyhby123/vnav-personal 的 lab4目录](https://github.com/hbyhby123/vnav-personal/tree/master/lab4)；本地目录未初始化.git |
-| Lab3 | 用户反馈已完成稳定悬停和圆轨迹，参数为2/3/3/1 |
-| Lab4实现 | 两个C++和三个launch补丁已存在 |
-| 最近构建 | 用户已反馈All 20 packages succeeded；3个包有警告、无失败；尚需确认四个Part补丁已安装并进行飞行测试 |
-| 运行结果 | —；尚无完整通关视频、bag或可复核成绩 |
-
-## 阅读前先懂这些词
+## 名词说明
 
 | **术语** | **大白话解释** |
 | --- | --- |
-| ROS / 节点 / 话题 | ROS让程序互相传消息；节点是程序，话题是传某类消息的通道 |
-| catkin / rosdep | catkin负责编译ROS工程；rosdep根据清单安装系统依赖 |
-| 补丁 / 依赖 | 补丁只替换部分文件；依赖是程序所需的其他库和工具 |
-| launch / 增益 | launch配置启动哪些节点；增益是反馈修正误差的强度 |
-| 位姿 / 航点 / yaw | 位姿是位置和朝向；航点是经过的目标位置；yaw是水平朝向角 |
-| snap / QP | snap是位置四阶导数，用于衡量剧烈变化；QP是带约束的二次代价最小化问题 |
-| bag / YAML / CSV | bag记录ROS消息；YAML保存参数；CSV保存表格数据 |
-| TF / RViz | TF描述坐标系关系；RViz是查看机器人状态和坐标的窗口 |
-| Unity / Xorg / FFmpeg | Unity是本实验场景运行器；Xorg是支持本录屏方式的桌面会话；FFmpeg是视频记录工具 |
+| ROS / 节点 / 话题 | 让程序协作的框架 / 一个工作程序 / 程序交换消息的通道 |
+| TESSE Unity | 本实验无人机和赛道的仿真环境 |
+| catkin / rosdep | 编译ROS工程的工具 / 按清单准备依赖的工具 |
+| 位姿 / 航点 | 位置加朝向 / 希望经过的目标位置 |
+| yaw / 四元数 | 水平朝向角 / 用4个数表示三维方向的方法 |
+| snap / QP | 位置四阶导数，用于衡量猛烈变化 / 带约束的二次代价优化 |
+| 闭环 / 增益 | 反复比较目标和实际再纠正 / 反馈修正的强度 |
+| bag / CSV / YAML | ROS消息记录 / 表格文本 / 参数文本 |
+| RMSE | 误差平方求平均再开方，较大的偏差权重更高 |
+| SHA256 | 文件内容指纹，用来验证是否逐字节一致 |
+| 稀疏检出 | 只下载仓库指定目录，避免下载大视频 |
 
 ## 任务内容
 
 | **任务名称** | **要解决的问题** | **采用的方法 / 技术** | **预期结果** |
 | --- | --- | --- | --- |
-| 个人题1：单段轨迹，20分 | 不同多项式次数和端点约束下怎样最省速度代价 | QP建模、求解和约束代回 | 推导PDF；本目录尚未提供答案 |
-| 个人题2：多段轨迹，15分 | 需要多少参数和连接条件 | 最小snap约束计数并推广到r阶 | 推导PDF；本目录尚未提供答案 |
-| Part0首门悬停 | 先验证目标和控制器接通 | 首门固定目标、零速度与零加速度 | 首门附近稳定，待实测 |
-| Part1.1状态读取 | 不能从错误位置规划 | 读取当前位置与朝向，等待有效状态 | 有效轨迹起点 |
-| Part1.2轨迹生成 | 依次连接赛门且避免朝向跳变 | 位置与yaw分开优化、共用时间分配 | 连续参考轨迹 |
-| Part1.3轨迹跟随 | 控制器需要每个时刻的目标 | 按经过时间取目标，每秒50次发布 | 完整通关，待实测 |
-| 团队采集与提交，65分含上述代码 | 让运行结果可复核 | 同轮视频、bag、参数与代码快照 | 最快完整轮次及公开链接；尚待采集 |
-| 可选提速 | 完成后缩短有效通关时间 | 调整time_scale并比较完整轮次 | 真实对比记录；不预设成绩 |
+| D1 单段轨迹优化，20分 | 不同次数与端点约束下如何最小化代价 | QP矩阵、有理数精确求解、约束代回 | 完整推导PDF，已生成 |
+| D2 多段轨迹优化，15分 | 轨迹需要多少系数和连接条件 | Euler-Lagrange变分方程、连续与自然条件计数 | r=4与一般r阶推导PDF，已生成 |
+| Part0 首门悬停 | 验证目标、坐标和控制器 | 第一门固定目标、零速度加速度、TF坐标关系 | 首门稳定，实测截图已回传 |
+| Part1.1～1.3 竞速，团队65分含Part0 | 依次经过全部赛门 | 有效起点、轨迹优化、yaw展开、时间采样 | 用户确认一次完整通关，视频和bag已归档 |
+| 数据与复习 | 说明真实误差并支持后期演示 | 状态时间对齐、CSV与图表、操作与问答 | 可复算指标与逐终端操作 |
+| 可选加速 | 对比更短的有效通关时间 | 本次未做多轮时间倍率对比 | 不申报最快团队或额外加速成绩 |
 
 ## 交付文件清单
 
 | **文件 / 目录** | **作用** | **说明** |
 | --- | --- | --- |
-| [README.md](README.md) | 整个项目入口 | 总览、任务、交付、环境和原理 |
-| [LAB4_操作与交付清单.md](LAB4_操作与交付清单.md) | 从Lab3接着做Lab4的完整指南 | 终端顺序、截图名称、修复与演示 |
-| [全部README完整内容.md](全部README完整内容.md) | 本次全部README的完整正文汇编 | 逐文件保留完整Markdown，方便复制检查 |
-| [整理自检与变更清单.md](整理自检与变更清单.md) | 本次新增和修改文件清单 | 包含逐项自检、真实状态与验证边界 |
-| [lab4_quickstart.zip](lab4_quickstart.zip) | 传到Ubuntu的快速操作包 | 含程序补丁、脚本、逐层README和操作指南 |
-| [lab4_整理后仓库.zip](lab4_整理后仓库.zip) | 本地整理结果完整快照 | 含根文档、逐层文档和快速操作包；不含自身 |
-| [lab4_quickstart/README.md](lab4_quickstart/README.md) | 快速包导航 | 说明适用前提和脚本入口 |
-| [lab4_quickstart/LAB4_操作与交付清单.md](lab4_quickstart/LAB4_操作与交付清单.md) | 操作指南的随包副本 | 与根目录同名文件同步 |
-| [lab4_quickstart/scripts/README.md](lab4_quickstart/scripts/README.md) | 脚本模块说明 | 安装、修复、生成、定位和记录 |
-| [lab4_quickstart/scripts/install_lab4.sh](lab4_quickstart/scripts/install_lab4.sh) | 安装Lab4并构建 | 保留Lab3；新增README不复制进ROS源码目录 |
-| [lab4_quickstart/scripts/repair_nlopt.sh](lab4_quickstart/scripts/repair_nlopt.sh) | 修复NLopt下载失败 | 验证压缩包后使用本地缓存，保留其他编译成果 |
-| [lab4_quickstart/scripts/repair_dependencies.sh](lab4_quickstart/scripts/repair_dependencies.sh) | 修复实际出现的构建问题 | 缺gflags_catkin、catkin_simple旧缓存 |
-| [lab4_quickstart/scripts/find_simulator.py](lab4_quickstart/scripts/find_simulator.py) | 定位模拟器与赛门表 | 生成~/lab4_evidence/sim.env |
-| [lab4_quickstart/scripts/record_race.sh](lab4_quickstart/scripts/record_race.sh) | 同轮录像和录消息 | 保存mp4、bag、参数、源码快照和日志 |
-| [lab4_quickstart/scripts/build_patch.py](lab4_quickstart/scripts/build_patch.py) | 从官方模板生成补丁 | 供维护追溯，运行会覆盖五个程序补丁 |
-| [lab4_quickstart/patches/README.md](lab4_quickstart/patches/README.md) | 补丁范围与接口导航 | 不是完整ROS工作空间 |
-| [lab4_quickstart/patches/planner_pkg/README.md](lab4_quickstart/patches/planner_pkg/README.md) | 首门与赛门模块说明 | 任务、接口和运行方法 |
-| [lab4_quickstart/patches/planner_pkg/src/README.md](lab4_quickstart/patches/planner_pkg/src/README.md) | 首门源码说明 | 解释trajCB与main |
-| [lab4_quickstart/patches/planner_pkg/src/simple_traj_planner.cpp](lab4_quickstart/patches/planner_pkg/src/simple_traj_planner.cpp) | Part0首门目标发布 | 同时发布目标坐标关系 |
-| [lab4_quickstart/patches/planner_pkg/launch/README.md](lab4_quickstart/patches/planner_pkg/launch/README.md) | 首门与航点启动说明 | 明确两者启动范围与先后顺序 |
-| [lab4_quickstart/patches/planner_pkg/launch/static_point_test.launch](lab4_quickstart/patches/planner_pkg/launch/static_point_test.launch) | 首门悬停启动配置 | 启动控制器、航点和首门目标节点 |
-| [lab4_quickstart/patches/planner_pkg/launch/traj_gen.launch](lab4_quickstart/patches/planner_pkg/launch/traj_gen.launch) | 赛门发布启动配置 | 完整竞速时最后启动，用于触发规划 |
-| [lab4_quickstart/patches/trajectory_generation_pkg/README.md](lab4_quickstart/patches/trajectory_generation_pkg/README.md) | 轨迹模块说明 | 实际ROS包名为trajectory_generation |
-| [lab4_quickstart/patches/trajectory_generation_pkg/src/README.md](lab4_quickstart/patches/trajectory_generation_pkg/src/README.md) | 轨迹源码说明 | 解释三个Part、时间和边界 |
-| [lab4_quickstart/patches/trajectory_generation_pkg/src/trajectory_generation_node.cpp](lab4_quickstart/patches/trajectory_generation_pkg/src/trajectory_generation_node.cpp) | Part1.1～1.3实现 | 当前位置、平滑优化、按时间发送目标 |
-| [lab4_quickstart/patches/trajectory_generation_pkg/launch/README.md](lab4_quickstart/patches/trajectory_generation_pkg/launch/README.md) | 跟随器启动说明 | 控制增益和时间倍率 |
-| [lab4_quickstart/patches/trajectory_generation_pkg/launch/traj_following.launch](lab4_quickstart/patches/trajectory_generation_pkg/launch/traj_following.launch) | 竞速跟随启动配置 | 启动轨迹节点和Lab3控制器 |
+| [code/](code/README.md) | 三个完整实际运行ROS包与官方模板对照 | 每层README列出文件、函数、接口和参数 |
+| [data/](data/README.md) | 原始证据与可复算分析 | raw保原件，analysis存派生结果 |
+| [deliverables/](deliverables/README.md) | 正式报告、个人题与可编辑原稿 | 3份PDF及重建源码 |
+| [review/](review/README.md) | 操作、复习和脚本 | 只保留两份主说明，避免多份过时教程 |
+| [rviz_drone_race.txt](rviz_drone_race.txt) | 真实GitHub媒体入口和正式平台链接状态 | Drive/Dropbox尚待补；不伪造公开链接 |
+| [README.md](README.md) | 本层总览 | 任务、交付、运行、结果和原理 |
+| [.gitignore](.gitignore) | 忽略本机分析缓存与还原视频副本 | 防止重复加入超过100MB的原视频 |
+| [.gitattributes](.gitattributes) | 标记二进制与Shell换行 | 避免二进制差异噪声，Shell保持LF |
 
-### 实验结束后另需提交的材料
-
-| **文件 / 材料** | **作用** | **当前状态** |
+| **直接交付入口** | **内容** | **状态** |
 | --- | --- | --- |
-| 理论解答PDF / 综合报告PDF | 完成个人理论与实验结果说明 | —；未生成 |
-| 完整controller_pkg、planner_pkg、trajectory_generation_pkg | 实际运行版本的完整源码 | —；本目录只有Lab4增量补丁，不含完整三个包 |
-| 完整通关视频与最快完整一轮bag | 证明依次通过全部门并保留状态 | —；未收到 |
-| rviz_drone_race.txt | 保存视频和bag的公开链接 | —；没有真实链接，因此未伪造文件 |
-| 截图、参数与运行表 | 支撑报告的可复核证据 | 指南已规定文件名，实际材料尚待回传 |
+| [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 9页，方法、理论概要、真实结果、截图和复现 | 已生成并检查全部页面 |
+| [D1理论PDF](deliverables/deliverable_1.pdf) | 2页，单段轨迹全部小问 | 已精确核验 |
+| [D2理论PDF](deliverables/deliverable_2.pdf) | 2页，约束计数与r阶推广 | 假设与自然条件明确 |
+| [完整运行视频预览](data/raw/run_20261022_000059/race_preview.mp4) | 160.75秒，约10.8MB | 连续缩放重编码，不剪辑、不加速 |
+| [原视频分片与还原](data/raw/run_20261022_000059/original_video/README.md) | 149508837字节原视频，3片 | 可恢复原视频并校验SHA256 |
+| [原始bag](data/raw/run_20261022_000059/race.bag) | 原样保存5个话题 | 两个必需状态话题均非零 |
+| [8张原图](data/raw/screenshots/README.md) | 连续编号01至08 | 内容与数字未修改 |
+| [指标与复算](data/analysis/README.md) | JSON、CSV、4幅图与脚本 | 可从原bag独立复算 |
+| [操作与演示](review/操作与演示.md) | 新环境准备与所有程序关闭后的完整启动 | 当前已有环境直接看B部分 |
+| [复习速记](review/复习速记.md) | 文件角色、算法主线、参数、结果与理论要点 | 检查前快速阅读 |
 
 ## 环境与快速开始
 
 | **步骤** | **命令 / 操作** | **说明** |
 | --- | --- | --- |
-| 适用环境 | Ubuntu20.04.6、ROS Noetic、Python3；已完成Lab3 | 程序命令在Ubuntu执行，不在Windows PowerShell执行 |
-| 现有前提 | 保留~/vnav_ws/src/controller_pkg和已可用的bridge | 不要用官方空白Lab3覆盖已调好的控制器 |
-| 首次系统工具 | sudo apt-get install -y git wget unzip python3-catkin-tools python3-rosdep autoconf automake libtool patch pkg-config libgflags-dev ffmpeg x11-utils | 需要sudo权限；完整流程见操作指南 |
-| 传输快速包 | 将lab4_quickstart.zip传到Ubuntu，再unzip -n ~/Downloads/lab4_quickstart.zip -d ~/ | 路径按实际下载位置替换；旧版本先改名备份 |
-| 历史NLopt下载故障 | bash ~/lab4_quickstart/scripts/repair_nlopt.sh | 当前已编译成功，无需重跑；仅同类下载错误时使用 |
-| 早期依赖与缓存故障 | bash ~/lab4_quickstart/scripts/repair_dependencies.sh | 先补gflags_catkin并重建旧缓存，再继续；首次完整配置需按指南 |
-| 安装程序补丁 | bash ~/lab4_quickstart/scripts/install_lab4.sh | 先备份，覆盖五个Lab4程序文件；会重新编译 |
-| 场景准备 | 下载官方Lab4 Linux模拟器并解压到~/vnav-builds | 源码包不含Unity场景；链接见完整指南A4 |
-| 定位场景 | python3 ~/lab4_quickstart/scripts/find_simulator.py | 生成~/lab4_evidence/sim.env |
-| 每个ROS终端 | source /opt/ros/noetic/setup.bash；source ~/vnav_ws/devel/setup.bash | 分成两条命令执行 |
-| 模拟器 | source ~/lab4_evidence/sim.env；cd "$(dirname "$SIM_EXEC")"；"$SIM_EXEC" | 分成三条命令执行，在独立终端保持运行 |
-| 桥接 | roslaunch tesse_ros_bridge tesse_quadrotor_bridge.launch | 独立终端运行，连接Unity和ROS |
-| 先测悬停 | source ~/lab4_evidence/sim.env；roslaunch planner_pkg static_point_test.launch simulator_data_directory:="$SIM_DATA" | 两条命令；通过后Ctrl+C停止悬停测试 |
-| 竞速跟随 | roslaunch trajectory_generation traj_following.launch time_scale:=2.0 | 独立终端；先使用默认2/3/3/1增益，实际仍需验证 |
-| 开始记录 | bash ~/lab4_quickstart/scripts/record_race.sh | 新终端运行，等待Video and bag recording提示 |
-| 最后发布赛门 | source ~/lab4_evidence/sim.env；roslaunch planner_pkg traj_gen.launch simulator_data_directory:="$SIM_DATA" | 两条命令；触发飞行，随后切回Unity |
-| 正常保存 | 通过最后一门后等3秒，回录制终端按Enter | 检查视频完整、bag含两个状态话题，再判定有效轮次 |
-| 再跑一轮 | 停止航点与跟随节点→Unity按R→跟随→记录→航点 | 旧轨迹不会只因按R自动重算 |
+| 运行环境 | Ubuntu20.04.6、ROS Noetic、VNAV2021、TESSE Lab4 | 仿真器和ROS本体不在仓库中 |
+| 新环境 | 先看[操作手册A部分](review/操作与演示.md) | 只取code和review；先复制三包再配依赖 |
+| 终端1 | source ~/lab4_evidence/sim.env；cd "$(dirname "$SIM_EXEC")"；"$SIM_EXEC" | 分三条执行；打开Unity后按R复位 |
+| 终端2 | source /opt/ros/noetic/setup.bash；source ~/vnav_ws/devel/setup.bash；roslaunch tesse_ros_bridge tesse_quadrotor_bridge.launch | 分三条执行，桥接连接仿真和ROS |
+| 首门测试 | roslaunch planner_pkg static_point_test.launch simulator_data_directory:="$SIM_DATA" | 新终端先source工作空间与sim.env；成功后Ctrl+C停止 |
+| 终端3 跟随 | roslaunch trajectory_generation traj_following.launch kx:=2 kv:=3 kr:=3 komega:=1 time_scale:=2.0 | 不同时运行Lab3旧traj_tracking.launch |
+| 终端4 记录 | bash ~/vnav_lab4_source/lab4/review/scripts/record_race.sh | 脚本路径按实际下载位置替换，等待记录就绪 |
+| 终端5 航点 | roslaunch planner_pkg traj_gen.launch simulator_data_directory:="$SIM_DATA" | 新终端先source；最后执行以触发飞行 |
+| 结束 | 通过最后一门后等3秒，回录制终端按Enter | 检查视频完整、bag话题齐全 |
+| 再来一轮 | 停航点→停跟随器→Unity按R→跟随→记录→航点 | 只按R不会清除旧轨迹 |
 
-不能直接在本目录运行catkin build：这里没有完整ROS包清单和依赖。逐终端的可复制命令、截图编号和故障处理见[完整操作指南](LAB4_操作与交付清单.md)。
+已经完成实验时不需要重装。上表用于回顾；逐终端可直接复制的完整命令在[操作与演示](review/操作与演示.md)。
 
 ## 目录结构
 
 ```text
-机器人集成小组项目1/
-├── README.md
-├── LAB4_操作与交付清单.md
-├── 全部README完整内容.md
-├── 整理自检与变更清单.md
-├── lab4_quickstart.zip
-├── lab4_整理后仓库.zip
-└── lab4_quickstart/
-    ├── README.md
-    ├── LAB4_操作与交付清单.md
-    ├── scripts/
-    │   ├── README.md
-    │   ├── install_lab4.sh
-    │   ├── repair_dependencies.sh
-    │   ├── repair_nlopt.sh
-    │   ├── find_simulator.py
-    │   ├── record_race.sh
-    │   └── build_patch.py
-    └── patches/
-        ├── README.md
-        ├── planner_pkg/
-        │   ├── README.md
-        │   ├── src/
-        │   │   ├── README.md
-        │   │   └── simple_traj_planner.cpp
-        │   └── launch/
-        │       ├── README.md
-        │       ├── static_point_test.launch
-        │       └── traj_gen.launch
-        └── trajectory_generation_pkg/
-            ├── README.md
-            ├── src/
-            │   ├── README.md
-            │   └── trajectory_generation_node.cpp
-            └── launch/
-                ├── README.md
-                └── traj_following.launch
+lab4/
+├── README.md                     总览与真实状态
+├── rviz_drone_race.txt            视频与bag入口，标记正式平台链接待补
+├── code/
+│   ├── controller_pkg/            实际运行的Lab3控制器完整包
+│   ├── planner_pkg/               赛门读取与首门悬停完整包
+│   ├── trajectory_generation_pkg/ 轨迹规划与跟随完整包
+│   └── original/                  官方VNAV2021模板与来源指纹
+├── data/
+│   ├── raw/
+│   │   ├── screenshots/          原始8张截图
+│   │   ├── upload_manifest.json   上传tar及全部成员的SHA256
+│   │   └── run_20261022_000059/    bag、参数、日志、代码快照和视频预览
+│   │       └── original_video/    3个原视频分片与还原脚本
+│   └── analysis/                  CSV、指标、4幅图和复算脚本
+├── deliverables/                  9页报告、两份理论PDF、原稿和重建脚本
+│   └── assets/equations/          可重建的公式图
+└── review/                        操作与演示、复习速记
+    └── scripts/                   安装、依赖修复、场景识别与录制
 ```
 
 | **目录** | **一句话说明** |
 | --- | --- |
-| 根目录 | 提供总览、完整操作指南、全部README正文和整理结果 |
-| lab4_quickstart/ | 可传到Ubuntu使用的操作包主体 |
-| scripts/ | 准备工程、修复故障、定位场景并记录实验材料 |
-| patches/ | 仅包含要替换的Lab4程序文件 |
-| patches/planner_pkg/ | 处理第一门目标和赛门发布配置 |
-| patches/planner_pkg/src/ | 保存Part0首门悬停实现 |
-| patches/planner_pkg/launch/ | 保存首门测试及赛门发布配置 |
-| patches/trajectory_generation_pkg/ | 保存轨迹规划与跟随补丁 |
-| patches/trajectory_generation_pkg/src/ | 保存三个Part的轨迹节点实现 |
-| patches/trajectory_generation_pkg/launch/ | 保存竞速节点与控制器的联合启动配置 |
+| code | 查看实际怎么实现、怎么构建 |
+| data/raw | 查看原始证据，不把分析图冒充截图 |
+| data/analysis | 查看误差如何算出，能重新生成结果 |
+| deliverables | 交报告与个人理论题时看这里 |
+| review | 下次复习和现场演示时看这里 |
 
 ## 核心原理通俗讲解
 
-无人机需要同时知道“飞哪里”和“怎么飞”。Lab4从赛门表取得目标位置，画出一条随时间变化的平滑路线；Lab3控制器比较目标和实际状态，再决定旋翼怎么转。桥接程序把Unity场景和ROS消息接起来。
+赛门告诉无人机“应该经过哪里”，轨迹优化器把这些点连成平滑的时间曲线。程序每秒取50个目标位置、速度、加速度和朝向，交给Lab3控制器；控制器比较实际状态，再调整四个旋翼，这就是闭环跟踪。
 
-| **阶段** | **做什么** | **为什么需要** |
+| **环节** | **本次实现** | **复习时注意** |
 | --- | --- | --- |
-| 赛门输入 | 原工程读取CSV并转换到ROS坐标，发出一组位姿 | Unity与ROS对坐标的表示不同，不能直接混用 |
-| 起点确认 | 读取当前位置和朝向；未收到有效状态就等 | 避免从未初始化或错误起点生成路线 |
-| 位置与朝向 | 分别优化位置和yaw，并展开±π交界的角度 | 减少不必要的大幅转向 |
-| 平滑优化 | 最小化snap，给每段分配时间并设置端点边界 | 使目标变化平滑；不自动保证避障、速度硬约束或完整穿门 |
-| 按时间取点 | 每秒50次取当前位置、速度、加速度和朝向目标 | 让控制器持续获得下一时刻应追的状态 |
-| 真实验证 | 完整视频加同轮bag、参数和源码 | 区分程序已写好与实验已完成 |
+| 起点 | 等收到有效当前位置和yaw | 不用未初始化值规划 |
+| 位置与方向 | 位置3维、yaw1维，使用相同段时间 | yaw跨±π需要连续展开 |
+| 平滑 | 最小snap，端点采用库的边界设置 | 不等于自动避障或速度硬限幅 |
+| 时间 | 段时间估计后乘2.0，按经过时间采样 | N=10是10个系数，最高九次 |
+| 末端 | 超过总时长后使用末端状态 | 重跑需重启跟随器 |
+| 核验 | 视频、同轮bag、参数、代码相互对应 | 单张终点图和中心距离不单独证明完整通关 |
 
-### 参数速查
+## 实测结果与统计边界
 
-| **参数** | **当前值** | **通俗解释** |
+| **指标** | **结果** | **统计口径** |
 | --- | --- | --- |
-| kx / kv / kr / komega | 2 / 3 / 3 / 1 | Lab3已反馈可用的四个反馈强度，Lab4仍要实测 |
-| time_scale | 默认2.0 | 估计段时间乘2；大倍率分配更多时间，不代表一定通关 |
-| v_max / a_max | 8.0 / 4.0 | 用于估计段时间，不是实际飞行硬上限 |
-| D / N | 3 / 10 | 三维位置；每段10个系数，最高九次 |
-| 发布频率 | 50Hz，即每秒50次 | 本补丁设置，区别于原框架5Hz |
+| 完整运行 | 1轮，12个赛门位姿 | 用户确认通关，连续视频与轨迹相互核对 |
+| 参数 | kx/kv/kr/komega=2/3/3/1，time_scale=2.0 | 原始parameters.yaml |
+| bag总时长 | 167.28s | 含准备、飞行和末端保持 |
+| 参考轨迹时长 | 134.17s | time_from_start终值，不是独立裁判成绩 |
+| 执行段样本 | 6708点 | 目标时间正在推进的区间 |
+| 三维位置RMSE | 0.0564m，约5.64cm | 期望状态按bag时间线性插值到实际状态时刻 |
+| 最大位置误差 | 0.0844m，约8.44cm | 同一执行段 |
+| X/Y/Z RMSE | 0.0072 / 0.0064 / 0.0556m | 主要偏差来自高度方向 |
+| yaw RMSE | 2.292° | 先展开目标yaw，再按最短角差计算 |
+| 加速比较 | — | 没有多轮成绩或最快团队比较 |
 
-## 复习与检查入口
+![期望与实际水平轨迹](data/analysis/trajectory_xy.png)
 
-| **要做的事** | **直接看哪里** |
+## 提交与来源
+
+| **项目** | **说明** |
 | --- | --- |
-| 逐终端运行、截图和演示 | [完整操作指南](LAB4_操作与交付清单.md) |
-| 快速定位函数和消息 | 进入对应src/README.md |
-| 查看这次到底改了什么 | [变更与自检](整理自检与变更清单.md) |
-| 复制所有README完整正文 | [全部README完整内容](全部README完整内容.md) |
-| 查看官方任务与基线 | [MIT Lab4要求](https://vnav.mit.edu/labs_2023/lab4/exercises.html)；[VNAV2021](https://github.com/MIT-SPARK/VNAV-labs/tree/VNAV2021/lab4) |
+| 学生 | 黄博宇，24020036026，中外计科一班，第8组 |
+| 文档日期 | 2026年10月22日；运行目录与原机器时间字符串保持不变 |
+| 个人与团队提交 | 按老师要求分别提交；GitHub归档不等于正式提交回执 |
+| 正式媒体链接 | Drive/Dropbox公开视频与bag链接仍待本人提供，rviz_drone_race.txt已真实标记 |
+| 原视频 | 分片保存只是解决单文件大小，不损失原始字节；预览是额外派生文件 |
+| 课程要求 | [MIT Lab4题面](https://vnav.mit.edu/labs_2023/lab4/exercises.html) |
+| 代码基线 | [VNAV2021](https://github.com/MIT-SPARK/VNAV-labs/tree/VNAV2021/lab4) |
+| 辅助说明 | 理论、代码准备、分析与整理使用AI辅助；运行、视频和截图来自用户Ubuntu |
+| [返回仓库总览](../README.md) | 查看Lab1至Lab4入口 |

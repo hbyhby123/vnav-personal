@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+*.joining
+data/raw/run_20261022_000059/race_original.mp4

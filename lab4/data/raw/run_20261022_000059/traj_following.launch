@@ -1,0 +1,9 @@
+<launch>
+  
+  <node name="trajectory_generation_node" pkg="trajectory_generation" type="trajectory_generation_node" output="screen"><param name="time_scale" value="$(arg time_scale)" /></node>
+
+  
+  <node name="controller_node" pkg="controller_pkg" type="controller_node" />
+
+  
+<arg name="kx" default="2.0" /><param name="kx" value="$(arg kx)" /><arg name="kv" default="3.0" /><param name="kv" value="$(arg kv)" /><arg name="kr" default="3.0" /><param name="kr" value="$(arg kr)" /><arg name="komega" default="1.0" /><param name="komega" value="$(arg komega)" /><arg name="time_scale" default="2.0" /></launch>

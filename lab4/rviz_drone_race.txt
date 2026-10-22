@@ -1,0 +1,11 @@
+Run ID: run_20261022_000059
+Status: one complete run reported by the student; video, bag, parameters and source archived.
+GitHub video preview: https://github.com/hbyhby123/vnav-personal/blob/master/lab4/data/raw/run_20261022_000059/race_preview.mp4
+GitHub original video recovery: https://github.com/hbyhby123/vnav-personal/tree/master/lab4/data/raw/run_20261022_000059/original_video
+GitHub rosbag: https://github.com/hbyhby123/vnav-personal/blob/master/lab4/data/raw/run_20261022_000059/race.bag
+Drive/Dropbox video link: NOT PROVIDED
+Drive/Dropbox bag link: NOT PROVIDED
+Course submission note: GitHub archival links above do not replace the required Drive/Dropbox public links.
+Planned trajectory duration (ROS time): 134.167835206 seconds; not an independently judged race result.
+Control gains: kx=2 kv=3 kr=3 komega=1
+Trajectory time_scale: 2.0

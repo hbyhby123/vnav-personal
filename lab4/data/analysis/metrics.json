@@ -1,0 +1,69 @@
+{
+  "run_id": "run_20261022_000059",
+  "bag_sha256": "9bd8a58fa15b6529bc06f3dd5e68c6eca65be39f2ab6789508829d74376ba9ff",
+  "bag_start_s": 1210.079999999,
+  "bag_end_s": 1377.36,
+  "bag_duration_s": 167.28000000099996,
+  "topic_counts": {
+    "/clock": 8196,
+    "/current_state": 8365,
+    "/desired_traj_vertices": 785,
+    "/desired_state": 7836,
+    "/rotor_speed_cmds": 15352
+  },
+  "waypoint_count": 12,
+  "trajectory_start_estimate_s": 1220.619999999,
+  "planned_trajectory_duration_s": 134.167835206,
+  "trajectory_end_estimate_s": 1354.787835205,
+  "max_tau_plateau_samples": 1129,
+  "execution": {
+    "samples": 6708,
+    "rmse_m": 0.056426309853602356,
+    "mean_m": 0.05555548043569047,
+    "median_m": 0.05686402329368984,
+    "p95_m": 0.06805351840644128,
+    "max_m": 0.0844282371318862
+  },
+  "all_overlap": {
+    "samples": 7837,
+    "rmse_m": 0.05442839857790143,
+    "mean_m": 0.053381647295885806,
+    "median_m": 0.05519994532077341,
+    "p95_m": 0.0674500618491169,
+    "max_m": 0.0844282371318862
+  },
+  "execution_axis_rmse_m": [
+    0.00717146800992987,
+    0.006392451139591888,
+    0.055602473494487825
+  ],
+  "execution_axis_mean_error_m": [
+    -0.0006468462549096619,
+    0.00043509216179243924,
+    -0.05467050802924382
+  ],
+  "execution_yaw_rmse_deg": 2.2922349468061194,
+  "execution_max_speed_mps": 1.6292319595235025,
+  "execution_mean_speed_mps": 0.7124572490682559,
+  "execution_distance_m": 95.57035572146211,
+  "endpoint_error_m": 0.04753478515771208,
+  "nearest_center_distances_m": [
+    0.05693675616199103,
+    0.06224446630825905,
+    0.054671243867320286,
+    0.0535426925826484,
+    0.05728298729116715,
+    0.05115645695315514,
+    0.049313743976704766,
+    0.06287063442498332,
+    0.053707660626767476,
+    0.0608122653075842,
+    0.051420933538783416,
+    0.047534785157818636
+  ],
+  "state_rate_hz": 50.000000000045475,
+  "desired_rate_hz": 50.000000000045475,
+  "clock_backsteps": 0,
+  "method": "ROS bag record timestamps; desired positions/velocities and unwrapped yaw linearly interpolated to actual-state timestamps; execution origin median(t_record - time_from_start) over advancing samples; execution window excludes final hold; 3D error sqrt(dx²+dy²+dz²).",
+  "limits": "One recorded complete run; planned duration is not independently adjudicated race time. Waypoint center distance does not prove gate passage. Video is checked separately. No fastest-team or acceleration comparison claim."
+}

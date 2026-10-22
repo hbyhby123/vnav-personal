@@ -1,0 +1,18 @@
+path:        /home/by/lab4_evidence/runs/run_20261022_000059/race.bag
+version:     2.0
+duration:    2:47s (167s)
+start:       Dec 31 1969 16:20:10.08 (1210.08)
+end:         Dec 31 1969 16:22:57.36 (1377.36)
+size:        10.7 MB
+messages:    40534
+compression: none [14/14 chunks]
+types:       geometry_msgs/PoseArray                      [916c28c5764443f268b296bb671b9d97]
+             mav_msgs/Actuators                           [25741daf38ed25442e3a66a855ee8d9c]
+             nav_msgs/Odometry                            [cd5e73d190d741a2f92e81eda573aca7]
+             rosgraph_msgs/Clock                          [a9c97c1d230cfc112e270351a944ee47]
+             trajectory_msgs/MultiDOFJointTrajectoryPoint [3ebe08d1abd5b65862d50e09430db776]
+topics:      /clock                    8196 msgs    : rosgraph_msgs/Clock                         
+             /current_state            8365 msgs    : nav_msgs/Odometry                           
+             /desired_state            7836 msgs    : trajectory_msgs/MultiDOFJointTrajectoryPoint
+             /desired_traj_vertices     785 msgs    : geometry_msgs/PoseArray                     
+             /rotor_speed_cmds        15352 msgs    : mav_msgs/Actuators

@@ -1,0 +1,6 @@
+[0m[INFO] [1792652459.811461416]: Subscribing to /clock[0m
+[0m[INFO] [1792652459.812524715]: Subscribing to /current_state[0m
+[0m[INFO] [1792652459.813374741]: Subscribing to /desired_state[0m
+[0m[INFO] [1792652459.814455657]: Subscribing to /desired_traj_vertices[0m
+[0m[INFO] [1792652459.815291001]: Subscribing to /rotor_speed_cmds[0m
+[0m[INFO] [1792652460.088754519, 1210.079999999]: Recording to '/home/by/lab4_evidence/runs/run_20261022_000059/race.bag'.[0m

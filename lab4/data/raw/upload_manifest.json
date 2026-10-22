@@ -1,0 +1,195 @@
+{
+  "archive_sha256": "7dd5dd82401aafdd62abb4cd54c648986b22bff1c7a44271d734d1711fa33099",
+  "files": [
+    {
+      "path": "Lab4截图/08_完整通关rosbag检查_记录时长与状态话题消息数量.png",
+      "bytes": 263705,
+      "sha256": "85f9b86d1404d3757ee07059abb31b50d779708e3c55e1b7a3484515007fbee0"
+    },
+    {
+      "path": "Lab4截图/03_Lab4模拟器路径_可执行文件与赛门数据目录确认.png",
+      "bytes": 129200,
+      "sha256": "33d246052ffda92dc7c7356aaadb66bef97aaa69e56faa1785c7d05513b22fc2"
+    },
+    {
+      "path": "Lab4截图/05_首门悬停验证_期望位置与实际位置及四个控制器增益.png",
+      "bytes": 90333,
+      "sha256": "9d9cf20c22f818b3d424bc266112834de23771dec7e5797adaded8d57dd2ddc5"
+    },
+    {
+      "path": "Lab4截图/07_Lab4完整通关_通过最后一道赛门后的画面.png",
+      "bytes": 1167047,
+      "sha256": "e1b405d3e346823fc43c60b8f8544a52334219dd258802eb451748fb114505b1"
+    },
+    {
+      "path": "Lab4截图/01_Lab4实验环境_Ubuntu20.04_ROSNoetic与工作空间目录.png",
+      "bytes": 29384,
+      "sha256": "d59e63611fbfc97f9af667ecbec8eb83bf1e5add271853a87ad71af7dd5e89c2"
+    },
+    {
+      "path": "Lab4截图/06_Lab4竞速过程_无人机穿越中间赛门画面.png",
+      "bytes": 754467,
+      "sha256": "ca9d40c7faaabafa59946f3aab692eb590b480f93468578bf4e370b9aa51f174"
+    },
+    {
+      "path": "Lab4截图/04_Part0首门悬停成功_无人机在第一道赛门附近稳定保持.png",
+      "bytes": 769240,
+      "sha256": "d586be28bc5aea160e25b841ceb2548f61346e6b2e286a8f79581343745659c2"
+    },
+    {
+      "path": "Lab4截图/02_Lab4四个Part补全后20个ROS包全部编译成功.png",
+      "bytes": 198733,
+      "sha256": "c5133584b4676f9a52410377d5ed3d151a881ef3ca01abf9e8a3fbd3458d4fb8"
+    },
+    {
+      "path": "run_20261022_000059/race.mp4",
+      "bytes": 149508837,
+      "sha256": "1ba4ab6ee212b49c51330d8ca7a6109e9016ed7b3970f70d563bf4c7a0ae49af"
+    },
+    {
+      "path": "run_20261022_000059/ffmpeg.log",
+      "bytes": 38084,
+      "sha256": "f6990fd1995333078a670a54aeaa3a54d0ede199544897540f8bf3ac283a0b9e"
+    },
+    {
+      "path": "run_20261022_000059/parameters.yaml",
+      "bytes": 11399,
+      "sha256": "1675de17c475da2ba2e6c7ff7b2095ddf9d57b4bd3835a678c2afb6a9123f231"
+    },
+    {
+      "path": "run_20261022_000059/desired_state_publishers.txt",
+      "bytes": 179,
+      "sha256": "ad9ca81e4c8a90c3a89c55c62552c88d4a8d2961ca751a21a48f0ace433e8463"
+    },
+    {
+      "path": "run_20261022_000059/race.bag",
+      "bytes": 11254426,
+      "sha256": "9bd8a58fa15b6529bc06f3dd5e68c6eca65be39f2ab6789508829d74376ba9ff"
+    },
+    {
+      "path": "run_20261022_000059/bag_info.txt",
+      "bytes": 1214,
+      "sha256": "78e048b9886d296382e2102175e976a13537baad9d302bc286f564b864b94bf4"
+    },
+    {
+      "path": "run_20261022_000059/rosbag.log",
+      "bytes": 476,
+      "sha256": "fe1ae562f7bcd26220371f36b19d5a28fbc4e19b7c5d0695d129937204881178"
+    },
+    {
+      "path": "run_20261022_000059/traj_following.launch",
+      "bytes": 612,
+      "sha256": "bebd5369f701dbf0b14b20ea88bb8e85096b936b5e5d0782645e9c6b2936e2a5"
+    },
+    {
+      "path": "run_20261022_000059/trajectory_generation_node.cpp",
+      "bytes": 11326,
+      "sha256": "0f03308f7e397a8dc8784b1454837cfa77519ed2cf03a014671aa20b20790ee0"
+    },
+    {
+      "path": "run_20261022_000059/record_start.txt",
+      "bytes": 26,
+      "sha256": "a4028f0f5b8508e71f9a15be81bd0ae4c251853605d781ea7217407d2669f9e4"
+    },
+    {
+      "path": "run_20261022_000059/simple_traj_planner.cpp",
+      "bytes": 2939,
+      "sha256": "056d9ed97ed893a6acef7d0660eac6312ca4b5c6331b88f177c166ff50de7b56"
+    },
+    {
+      "path": "controller_pkg/src/controller_node.cpp",
+      "bytes": 17436,
+      "sha256": "8428b1b9edd0ddd861d5966ce1b5852ec4a5f50163113bf67f21e5193b745849"
+    },
+    {
+      "path": "controller_pkg/src/traj_publisher.cpp",
+      "bytes": 3670,
+      "sha256": "4b12d9104f153e0509313fc7ccf36d9d823311e90058e092fa02e4f55be16057"
+    },
+    {
+      "path": "controller_pkg/package.xml",
+      "bytes": 996,
+      "sha256": "839b11b842d5b9203fdcf70ebb898b62dfbe6f90e39ce3c99678a3bab96d103a"
+    },
+    {
+      "path": "controller_pkg/rviz/lab3.rviz",
+      "bytes": 7684,
+      "sha256": "ae354e08ce7398e623b30721fb963fe29916d086d953fa084b9ca8214483159f"
+    },
+    {
+      "path": "controller_pkg/launch/traj_tracking.launch",
+      "bytes": 633,
+      "sha256": "3fa8e360f7e3fe3bea47605b9f1ea5336ea8fd64ba58a57b0cceab49bda24413"
+    },
+    {
+      "path": "controller_pkg/CMakeLists.txt",
+      "bytes": 1022,
+      "sha256": "55b0dab72e658a819ca1f4038adca8fa3689b1b7ac54637dd422dd82a9b24c4a"
+    },
+    {
+      "path": "planner_pkg/src/traj_planner.cpp",
+      "bytes": 225,
+      "sha256": "381cc8dd2b136815ccf7aa26402c33e251626181e2be117b7deb5b5da730f3b6"
+    },
+    {
+      "path": "planner_pkg/src/traj_vertices_publisher.cpp",
+      "bytes": 4889,
+      "sha256": "d326337fd1cc8561aa2d6df42c45100bfdf1762b0b7bf7da7ad98a1e80275d77"
+    },
+    {
+      "path": "planner_pkg/src/simple_traj_planner.cpp",
+      "bytes": 2939,
+      "sha256": "056d9ed97ed893a6acef7d0660eac6312ca4b5c6331b88f177c166ff50de7b56"
+    },
+    {
+      "path": "planner_pkg/package.xml",
+      "bytes": 857,
+      "sha256": "c532d7aae0d1276993cc094fdd8cd64575f991c430093e0fd8c82555ed5c7c42"
+    },
+    {
+      "path": "planner_pkg/include/csv.h",
+      "bytes": 57426,
+      "sha256": "01506f41a8ce49fefd16b8bcd5338e3219995eb148c138b245776cd67c90ae44"
+    },
+    {
+      "path": "planner_pkg/launch/traj_gen.launch",
+      "bytes": 342,
+      "sha256": "6ed48591859cc5991c0eb271dde050bcefab58f8fea2a4645d8589c471c93f6b"
+    },
+    {
+      "path": "planner_pkg/launch/static_point_test.launch",
+      "bytes": 804,
+      "sha256": "005d8653f9cd4b1fb883b6f76e52e29f699f69096e8b0ad8eb2c281ab214f5c9"
+    },
+    {
+      "path": "planner_pkg/CMakeLists.txt",
+      "bytes": 1156,
+      "sha256": "bdb3a9923abc2b045e2535dcfc679be92c76328ec74b9a75c8dfdebc6621bd3e"
+    },
+    {
+      "path": "trajectory_generation_pkg/src/spiral_pose_publisher.cpp",
+      "bytes": 1506,
+      "sha256": "913b8981f7576a98a6df3233235a949b84242cedaec0789b51d454440acbafd1"
+    },
+    {
+      "path": "trajectory_generation_pkg/src/trajectory_generation_node.cpp",
+      "bytes": 11326,
+      "sha256": "0f03308f7e397a8dc8784b1454837cfa77519ed2cf03a014671aa20b20790ee0"
+    },
+    {
+      "path": "trajectory_generation_pkg/package.xml",
+      "bytes": 4952,
+      "sha256": "677bff82b3827d305c388df7fed7edb898abdbd07da34906f741ee90d42bd846"
+    },
+    {
+      "path": "trajectory_generation_pkg/launch/traj_following.launch",
+      "bytes": 612,
+      "sha256": "bebd5369f701dbf0b14b20ea88bb8e85096b936b5e5d0782645e9c6b2936e2a5"
+    },
+    {
+      "path": "trajectory_generation_pkg/CMakeLists.txt",
+      "bytes": 7857,
+      "sha256": "3e4198f4ffda48bc038994a881ee4d1efeafe532af4606c30218157ca3ffedb0"
+    }
+  ]
+}

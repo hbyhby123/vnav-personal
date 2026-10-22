@@ -1,0 +1,68 @@
+[
+  {
+    "degree": 1,
+    "end_velocity_minus2": false,
+    "Q": "Matrix([[1]])",
+    "A": "Matrix([[1]])",
+    "b": "Matrix([[1]])",
+    "coefficients": [
+      "1"
+    ],
+    "polynomial": "t",
+    "cost": "1"
+  },
+  {
+    "degree": 2,
+    "end_velocity_minus2": false,
+    "Q": "Matrix([[1, 1], [1, 4/3]])",
+    "A": "Matrix([[1, 1]])",
+    "b": "Matrix([[1]])",
+    "coefficients": [
+      "1",
+      "0"
+    ],
+    "polynomial": "t",
+    "cost": "1"
+  },
+  {
+    "degree": 2,
+    "end_velocity_minus2": true,
+    "Q": "Matrix([[1, 1], [1, 4/3]])",
+    "A": "Matrix([[1, 1], [1, 2]])",
+    "b": "Matrix([[1], [-2]])",
+    "coefficients": [
+      "4",
+      "-3"
+    ],
+    "polynomial": "-3*t**2 + 4*t",
+    "cost": "4"
+  },
+  {
+    "degree": 3,
+    "end_velocity_minus2": false,
+    "Q": "Matrix([[1, 1, 1], [1, 4/3, 3/2], [1, 3/2, 9/5]])",
+    "A": "Matrix([[1, 1, 1]])",
+    "b": "Matrix([[1]])",
+    "coefficients": [
+      "1",
+      "0",
+      "0"
+    ],
+    "polynomial": "t",
+    "cost": "1"
+  },
+  {
+    "degree": 3,
+    "end_velocity_minus2": true,
+    "Q": "Matrix([[1, 1, 1], [1, 4/3, 3/2], [1, 3/2, 9/5]])",
+    "A": "Matrix([[1, 1, 1], [1, 2, 3]])",
+    "b": "Matrix([[1], [-2]])",
+    "coefficients": [
+      "1/4",
+      "9/2",
+      "-15/4"
+    ],
+    "polynomial": "-15*t**3/4 + 9*t**2/2 + t/4",
+    "cost": "17/8"
+  }
+]

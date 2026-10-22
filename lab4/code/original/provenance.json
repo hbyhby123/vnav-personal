@@ -1,0 +1,17 @@
+[
+  {
+    "file": "controller_node.original.cpp",
+    "url": "https://raw.githubusercontent.com/MIT-SPARK/VNAV-labs/VNAV2021/lab3/controller_pkg/src/controller_node.cpp",
+    "sha256": "cf448e11be1dc1864f06760691085c7fb6fbf627873b14f62c7e420fb8ca0164"
+  },
+  {
+    "file": "simple_traj_planner.original.cpp",
+    "url": "https://raw.githubusercontent.com/MIT-SPARK/VNAV-labs/VNAV2021/lab4/planner_pkg/src/simple_traj_planner.cpp",
+    "sha256": "42fd615a3e006d095d3148779c9732248df3e51022f7cade6ea2edb196d31fbe"
+  },
+  {
+    "file": "trajectory_generation_node.original.cpp",
+    "url": "https://raw.githubusercontent.com/MIT-SPARK/VNAV-labs/VNAV2021/lab4/trajectory_generation_pkg/src/trajectory_generation_node.cpp",
+    "sha256": "d412f761cd08cc0a431d1e1a258cffb0117765f329fa2e64599151bdd7bf2dd3"
+  }
+]
