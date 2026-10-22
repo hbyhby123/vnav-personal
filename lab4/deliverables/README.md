@@ -15,6 +15,8 @@
 | **文件 / 目录** | **作用** |
 | --- | --- |
 | [assets](assets) | 进入下层README查看任务与逐文件清单 |
+| [Lab4_助教验收讲解提纲_黄博宇.pdf](Lab4_助教验收讲解提纲_黄博宇.pdf) | 3页口头讲解：开场、演示顺序、实测数字、常见追问 |
+| [build_acceptance_guide.py](build_acceptance_guide.py) | 重建验收讲解PDF；需要ReportLab与Windows微软雅黑字体 |
 | [Lab4_实验报告_黄博宇.pdf](Lab4_实验报告_黄博宇.pdf) | 7页正式实验报告 |
 | [render_readable_report.py](render_readable_report.py) | 将通俗版Markdown正文直接排成PDF，修改说明仅保留在原稿 |
 | [build_reports.py](build_reports.py) | 重建3份PDF与公式图的排版源码 |
@@ -37,7 +39,7 @@
 | **方向** | **内容** | **格式 / 示例** |
 | --- | --- | --- |
 | 输入 | metrics.json、原始截图、数学推导 | 不虚构成绩 |
-| 输出 | 3份PDF、2份Markdown、公式素材 | 7+2+2页 |
+| 输出 | 4份PDF、2份Markdown、公式素材 | 7+2+2+3页 |
 
 ## 参数说明
 
