@@ -46,7 +46,7 @@
 
 | **直接交付入口** | **内容** | **状态** |
 | --- | --- | --- |
-| [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 9页，方法、理论概要、真实结果、截图和复现 | 已生成并检查全部页面 |
+| [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 7页，方法、理论概要、真实结果、截图和复现 | 已生成并检查全部页面 |
 | [D1理论PDF](deliverables/deliverable_1.pdf) | 2页，单段轨迹全部小问 | 已精确核验 |
 | [D2理论PDF](deliverables/deliverable_2.pdf) | 2页，约束计数与r阶推广 | 假设与自然条件明确 |
 | [完整运行视频预览](data/raw/run_20261022_000059/race_preview.mp4) | 160.75秒，约10.8MB | 连续缩放重编码，不剪辑、不加速 |
@@ -92,7 +92,7 @@ lab4/
 │   │   └── run_20261022_000059/    bag、参数、日志、代码快照和视频预览
 │   │       └── original_video/    3个原视频分片与还原脚本
 │   └── analysis/                  CSV、指标、4幅图和复算脚本
-├── deliverables/                  9页报告、两份理论PDF、原稿和重建脚本
+├── deliverables/                  7页报告、两份理论PDF、原稿和重建脚本
 │   └── assets/equations/          可重建的公式图
 └── review/                        操作与演示、复习速记
     └── scripts/                   安装、依赖修复、场景识别与录制
