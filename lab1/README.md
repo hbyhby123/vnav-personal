@@ -1,4 +1,4 @@
-# Lab1 材料导航
+# Lab1 开发工具与C++基础
 
 | 要看什么 | 文件或目录 | 通俗说明 |
 |---|---|---|
@@ -9,5 +9,5 @@
 | 随机向量练习 | [RandomVector](RandomVector/) | 类接口、实现和构建文件 |
 | 文本作答 | [exercise1.txt](exercise1.txt) / [cpp-warmup.txt](cpp-warmup.txt) | 对应练习答案 |
 | 原始截图 | [figures](report/figures/) | 报告中的操作证据 |
-| 本页用途 | 历史材料导航 | 本次只整理导航，未重新运行或修改Lab1代码 |
-| 返回总目录 | [仓库首页](../README.md) | 查找Lab2与Lab3 |
+| 本页用途 | 实验资料导航 | 对照本实验报告、代码与操作截图 |
+| 返回总目录 | [仓库首页](../README.md) | 查看课程实验总导航 |
