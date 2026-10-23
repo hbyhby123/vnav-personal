@@ -1,5 +1,7 @@
 # Lab3 无人机轨迹生成与跟踪控制
 
+**最新报告：[20页中文版](deliverables/Lab3_Report_CN_Huang_Boyu.pdf) / [20页英文版](deliverables/Lab3_Report_EN_Huang_Boyu.pdf)，两份均使用全部8张原始截图。**
+
 **最终交付入口：[英文版提交包](submission/README.md)。仅交最新英文报告，D2为英文版；视频公开链接仍待补充。**
 
 ## 项目简介
@@ -50,7 +52,7 @@
 
 | **实际交付文件** | **作用** | **说明** |
 | --- | --- | --- |
-| [英文实验报告PDF](deliverables/Lab3_Report_EN_Huang_Boyu.pdf) | 13页完善版；唯一提交报告 | 已完成 |
+| [英文实验报告PDF](deliverables/Lab3_Report_EN_Huang_Boyu.pdf) | 20页完善版；唯一提交报告 | 已完成 |
 | [deliverables/deliverable_1.txt](deliverables/deliverable_1.txt) | 个人D1五问 | 已准备 |
 | [deliverables/deliverable_2.pdf](deliverables/deliverable_2.pdf) | 个人D2英文推导 | 2页PDF |
 | [完整controller_pkg](code/controller_pkg/README.md) | 团队控制器源码 | 保持整包，不只交cpp |

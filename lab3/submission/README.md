@@ -17,7 +17,7 @@
 | deliverable_1.txt | D1答案 |
 | deliverable_2.pdf | D2英文答案 |
 | controller_pkg/ | 完整源码和启动、显示配置 |
-| Lab3_Report_EN_Huang_Boyu.pdf | 唯一提交报告：13页英文完善版 |
+| Lab3_Report_EN_Huang_Boyu.pdf | 唯一提交报告：20页英文完善版 |
 | V01_RViz_circle_20261021_081755.mp4 | 40秒RViz绕圆视频 |
 | README.md | 提交说明 |
 

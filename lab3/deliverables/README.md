@@ -1,6 +1,6 @@
 # 正式交付材料
 
-**本次只提交：[英文完善版报告](Lab3_Report_EN_Huang_Boyu.pdf)。D2也已改为英文版。整包下载见[最终提交入口](../submission/README.md)。旧中文报告仅供留档复习。**
+**本次只提交：[英文完善版报告](Lab3_Report_EN_Huang_Boyu.pdf)。D2也已改为英文版。整包下载见[最终提交入口](../submission/README.md)。中文版也已更新为20页，供阅读复习；最终提交仍使用英文版。**
 
 PDF是固定排版文件，便于提交；Markdown是可以直接修改的纯文字文档，图片通过相对路径引用。
 
@@ -23,16 +23,18 @@ PDF是固定排版文件，便于提交；Markdown是可以直接修改的纯文
 | --- | --- | --- | --- |
 | 个人D1 | 完成旋转表示转换五问 | ROS四元数与Eigen矩阵接口；Eigen是C++矩阵计算库 | 可阅读的文本答案 |
 | 个人D2 | 解释控制能力与阻力补偿 | 分配矩阵秩分析和动力学推导；秩表示独立控制关系的数量 | 2页推导PDF |
-| 综合报告 | 把方法和真实结果说明白 | 文字、原始截图与bag统计 | 13页英文报告及可编辑原稿 |
+| 综合报告 | 把方法和真实结果说明白 | 文字、原始截图与bag统计 | 20页英文报告及可编辑原稿 |
 
 ## 交付文件
 
 | **文件 / 目录** | **作用** | **说明** |
 | --- | --- | --- |
-| [Lab3_Report_EN_Huang_Boyu.pdf](Lab3_Report_EN_Huang_Boyu.pdf) | 13页英文完善版 | 本次提交报告 |
+| [Lab3_Report_CN_Huang_Boyu.pdf](Lab3_Report_CN_Huang_Boyu.pdf) | 20页中文全截图版 | 阅读与复习，不放入英文提交包 |
+| [Lab3_Report_CN_Huang_Boyu.md](Lab3_Report_CN_Huang_Boyu.md) | 中文可编辑原稿 | 引用assets_current |
+| [Lab3_Report_EN_Huang_Boyu.pdf](Lab3_Report_EN_Huang_Boyu.pdf) | 20页英文完善版 | 本次提交报告 |
 | [Lab3_Report_EN_Huang_Boyu.md](Lab3_Report_EN_Huang_Boyu.md) | 英文可编辑原稿 | 引用assets_current |
 | [deliverable_2_English.md](deliverable_2_English.md) | D2英文原稿 | 对应最新deliverable_2.pdf |
-| [assets_current/](assets_current/README.md) | 当前英文稿的图片 | 新版素材 |
+| [assets_current/](assets_current/README.md) | 当前中英文稿的图片 | 新版素材 |
 | [assets/](assets/README.md) | 可编辑报告需要的图片素材 | 进入下层查看逐文件清单 |
 | [Lab3_实验报告_可编辑原稿.md](Lab3_实验报告_可编辑原稿.md) | 可编辑报告文本，引用assets及data中的图片 | 现有文件 |
 | [Lab3_实验报告_黄博宇.pdf](Lab3_实验报告_黄博宇.pdf) | 旧中文报告，仅留档；本次不提交 | 现有文件 |

@@ -1,4 +1,4 @@
-# 当前英文报告素材
+# 当前中英文报告素材
 
 ## 任务内容
 
@@ -10,7 +10,7 @@
 
 | **文件 / 目录** | **作用** |
 | --- | --- |
-| screenshots/ | GitHub原始截图，报告选用其中5张 |
+| screenshots/ | GitHub原始截图，20页报告全部使用8张 |
 | trajectory.png、tracking_errors.png、rotor_commands.png | 实测数据分析曲线 |
 | 其余PNG | 控制与理论推导公式 |
 

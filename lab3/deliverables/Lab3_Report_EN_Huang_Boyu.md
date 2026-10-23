@@ -8,223 +8,132 @@ Lab date: 21 October 2026. Report date: 23 October 2026.
 
 ### Summary
 
-A quadrotor geometric controller was completed in Ubuntu 20.04 and ROS Noetic. Hovering was checked before tracking a circle of 5 m radius at a height of 2 m. The controller converts state errors into thrust and moments, then into four rotor-speed commands. Early trials produced flips; reducing the gains in stages led to stable flight. Time alignment of a 44.64 s recording yielded 2,233 position samples. The three-dimensional position root-mean-square error was 0.1052 m, the maximum error was 0.1166 m, and the yaw root-mean-square error was 9.524 degrees. The basic tracking task was achieved, with a remaining height offset and heading lag. Drag compensation was derived but was not included in the flight controller.
+The 11 missing controller blocks were completed and tested in Ubuntu 20.04 with ROS Noetic. The vehicle first hovered, then followed a circle of 5 m radius at 2 m height. Early gains caused flips; lower attitude feedback and revised position and velocity feedback removed the obvious sway. A 44.64 s recording yielded 2,233 aligned position samples, a 3D position root-mean-square error (RMSE) of 0.1052 m, a maximum error of 0.1166 m and a yaw RMSE of 9.524 degrees. All eight original screenshots are included alongside the code, plots and theoretical work. Drag compensation was derived but was not used in the flight code.
 
-## 1 Introduction
+## 1 Introduction: What the Experiment Addresses
 
-A quadrotor cannot translate sideways without changing its attitude: lateral acceleration generally requires tilting the thrust direction. Position tracking therefore also requires attitude control. The geometric controller works directly with a rotation matrix, which describes the directions of the body axes, instead of repeatedly converting the attitude to Euler angles.
+To accelerate sideways, a quadrotor normally tilts so that thrust has a horizontal component. Position and attitude therefore have to be controlled together. The controller repeatedly compares the reference and actual state, calculates the force and turning moments needed, and distributes them to the four rotors.
 
-The coding task was to fill 11 blanks in controller_node.cpp. The reference trajectory was already provided in traj_publisher.cpp; STATIC_POSE selects hovering or circle tracking. This report follows the work from connecting the programs and tuning the controller to checking the recorded tracking errors. D1 interface answers and the two D2 theory questions are included in the appendices. The project uses VNAV2021 and the 2023 Lab 3 instructions [1,2].
+Table 1. Laboratory tasks
 
-## 2 Experimental Set-up
-
-Table 1. Experimental platform
-
-| Item | Configuration and purpose |
+| Task | Work completed |
 | --- | --- |
-| Environment | VMware; Ubuntu 20.04.6 LTS; ROS Noetic |
-| Simulation and display | TESSE Unity for flight; RViz for states and trajectories |
-| Workspace | ~/vnav_ws; catkin_tools; mav_comm and catkin_simple dependencies |
-| Recording | ROS bag for states and commands; RViz screen video |
+| D1 | Five interface questions on attitude conversion |
+| D2 | Rotor-configuration analysis and drag-compensation derivation |
+| D3 | Controller completion, tuning, hovering and circle tracking |
 
-Appendix D selects five original screenshots covering the environment, build, simulator startup, hover height and circle display. The remaining originals are retained with the experiment materials.
+The work follows the 2023 Lab 3 exercises and the VNAV2021 project [1,2]. The reference trajectory is provided; a new path-planning algorithm is not required. The report follows the supplied template: introduction, set-up and procedure, results, discussion, conclusions and references.
 
-## 2.1 Data Flow and Control Method
+### 2.1 Environment and Directories
 
-The trajectory publisher provides desired position, velocity, acceleration and yaw. Yaw is the heading about the vertical axis. The bridge returns the simulated state. These two streams close the feedback loop: commands are updated from the latest available tracking error.
+The system and source directories were checked before building, so later commands used the intended workspace. ROS provides communication between programs; catkin builds the source into runnable nodes. Figure 1 records the actual checks.
 
-Table 2. Controller inputs and output
+![Figure 1. Ubuntu/ROS versions and source directories (original screenshot 01).](assets_current/screenshots/01_Ubuntu20.04与ROS_Noetic版本及Lab3工作空间源码目录.png)
 
-| Topic | Message type | Purpose |
+Table 2. Runtime environment
+
+| Item | Configuration | Purpose |
 | --- | --- | --- |
-| /desired_state | MultiDOFJointTrajectoryPoint | Desired position, velocity, acceleration and yaw |
-| /current_state | nav_msgs/Odometry | Measured pose, velocity and angular velocity |
-| /rotor_speed_cmds | mav_msgs/Actuators | Four rotor speeds in rad/s |
+| System | Ubuntu 20.04.6 LTS in VMware | Runs ROS and the simulator |
+| ROS | Noetic | Transfers states and commands |
+| Source | VNAV2021 | Provides controller template and trajectory publisher |
+| Workspace | ~/vnav_ws | Stores source, build products and setup files |
 
-Position and velocity errors use actual minus desired values: e_x=x-x_d and e_v=v-v_d. With world z pointing upward, gravity compensation is positive in the desired force in Equation (1). Position feedback pulls the vehicle back, velocity feedback damps overshoot, and the desired-acceleration term anticipates the force required by the trajectory.
+~/labs holds the downloaded teaching project, whereas ~/vnav_ws/src contains the source being built. The simulator is in ~/vnav-builds/lab3. Editing a different copy can make a source change appear to have no effect.
 
-![Equation (1)](assets_current/force.png)
+## 2 Experimental Set-up and Procedure
 
-The desired body z-axis is aligned with the force; the desired yaw supplies the remaining heading reference for R_d. Thrust is the projection of that force onto the current body z-axis. Attitude error and angular velocity determine the moment in Equations (2) and (3). The allowed simplification omits desired angular-rate and angular-acceleration feedforward.
+The first build checked dependencies and project structure. It did not establish that the controller was complete: a template can compile while its control blocks are still missing. Figure 2 belongs to this preparation stage.
 
-![Equation (2)](assets_current/attitude.png)
+![Figure 2. Successful initial catkin build (original screenshot 02).](assets_current/screenshots/02_Lab3原始工程首次catkin_build编译成功摘要.png)
 
-![Equation (3)](assets_current/moment.png)
+Table 3. Main dependencies
 
-### 2.2 Procedure and Recording
-
-Table 3. Experimental procedure
-
-| Step | Action and purpose | Check |
-| --- | --- | --- |
-| 1 | Install interfaces/dependencies; compile the workspace | Eight packages succeeded; none failed |
-| 2 | Start Unity, bridge, RViz and controller | Both state streams are present |
-| 3 | Use STATIC_POSE=1 for hover at (0,0,2) m | Tune until no obvious flipping or growing sway |
-| 4 | Use STATIC_POSE=0; rebuild for circle flight | Record video, bag and gains after settling |
-
-## 2.3 Reference Calculations and Gain Selection
-
-The circle is not just a list of isolated position targets. The publisher also supplies velocity and acceleration, allowing the controller to anticipate the motion rather than only reacting to position error. Differentiating the supplied reference gives Table 3a.
-
-Table 3a. Supplied circle reference and its derivatives
-
-| Axis | Position (m) | Velocity (m/s) | Acceleration (m/s squared) |
-| --- | --- | --- | --- |
-| x | 5sin(t/2) | 2.5cos(t/2) | -1.25sin(t/2) |
-| y | 5cos(t/2) | -2.5sin(t/2) | -1.25cos(t/2) |
-| z | 2 | 0 | 0 |
-
-The horizontal speed is 2.5 m/s, centripetal acceleration is 1.25 m/s squared, and period is about 12.57 s. With drag neglected, thrust must both support weight and provide the inward force. The corresponding ideal tilt is arctan(1.25/9.81), about 7.26 degrees. This is a reference-based calculation, not a measured flight attitude.
-
-Table 3b. Roles of the four gains
-
-| Gain | Final value | Main role | Practical interpretation |
-| --- | --- | --- | --- |
-| kx | 2 | Position feedback | Pulls toward the target; aggressive correction may overshoot |
-| kv | 3 | Velocity feedback | Damps motion during position correction |
-| kr | 3 | Attitude feedback | Turns the body toward the required thrust direction |
-| komega | 1 | Angular-rate feedback | Damps fast rotation, including sustained turning |
-
-A scale check is also possible with the source constants. For m=1 and c_f=0.001, equal rotor speeds in ideal level hover are sqrt[mg/(4c_f)], about 49.52 rad/s. This lies within the recorded command range of 29.17-63.60 rad/s. It is only a rough magnitude check, not evidence that the model parameters or allocation matrix are exact.
-
-Frame directions, rotor numbering and units should therefore be checked before blaming the gains. Making commands larger might produce lift temporarily without fixing an incorrect control direction. The tuning sequence and measured results follow in the next section.
-
-## 3 Results
-
-The hover target was 2 m high with a yaw of 45 degrees. Figure D4 gives a height of 1.952798 m; a separate terminal reading was 1.957025 m. These are different snapshots, not a repeated-measurement average or a statistical hover-error estimate.
-
-Table 4. Gain adjustments; the first two stages are debugging observations
-
-| Stage | kx / kv / kr / komega | Observation |
-| --- | --- | --- |
-| Initial implementation | 6 / 4 / 30 / 10 | Flipping and large command changes |
-| Lower attitude gains | 6 / 4 / 3 / 1 | Hover achieved; sway still grew |
-| Final gains | 2 / 3 / 3 / 1 | No obvious sway; circle flight recorded |
-
-The reference follows Table 3a with yaw_d=-t/2. Figure D5 records the RViz circle display; Figure 1 plots the bag-derived paths, and Table 5 gives the statistics.
-
-![Figure 1. Desired and actual circular paths; original analysis labels and units are retained.](assets_current/trajectory.png)
-
-Table 5. Circle-tracking statistics
-
-| Metric | Value |
+| Dependency/tool | Role |
 | --- | --- |
-| Common interval / position samples | 933.72-978.36 s; 44.64 s; 2,233 samples |
-| Actual revolutions | Approximately 3.552 |
-| 3D position RMSE / mean error | 0.1052 m / 0.1049 m |
-| Maximum / 95th-percentile error | 0.1166 m / 0.1134 m |
-| x / y / z RMSE | 0.0631 / 0.0632 / 0.0556 m |
-| Mean height / height range | 1.9446 m / 1.9318-1.9570 m |
-| Mean radius / radial RMSE | 5.0466 m / 0.0466 m |
-| Yaw RMSE / rotor command range | 9.524 degrees / 29.17-63.60 rad/s |
+| catkin_simple | Supports building the teaching packages |
+| mav_comm | Provides actuator and planning messages |
+| TESSE Python interface | Supports communication with the simulator |
 
-## 4 Discussion
+The final summary shows successful packages and no failed package. The CMake policy warning did not stop this build. Correct flight still required state checks and simulation tests.
 
-### 4.1 Error Calculation
+## 2.2 First Build of the Starter Project
 
-Root-mean-square error (RMSE) summarises the run while weighting larger deviations more strongly. The 3D position RMSE is the square root of the mean squared position-error norm. Actual states were sorted and deduplicated by header timestamp. Desired positions were linearly interpolated from bag ROS receipt times to those state times, using only the common interval. Yaw was unwrapped before interpolation and its error wrapped to [-pi,pi] to avoid artificial jumps at 180 degrees.
+TESSE simulates vehicle motion from the applied rotor commands. The bridge carries commands to the simulator and returns position, velocity and attitude. Figure 3 shows the initial scene; startup alone does not demonstrate controlled flight.
 
-![Figure 2. Position, 3D and yaw errors; local fluctuations are retained.](assets_current/tracking_errors.png)
+![Figure 3. Initial TESSE Unity scene (original screenshot 03).](assets_current/screenshots/03_TESSE_Unity仿真器启动后的无人机初始场景.png)
 
-### 4.2 Interpreting Position and Heading Errors
+Table 4. Roles of the programs
 
-Position errors do not grow continuously in Figure 2, supporting stable tracking during this recording rather than a stability proof for all initial states. Mean height is 5.54 cm below the target and mean radius is 4.66 cm too large. A visually circular path can therefore still contain persistent errors. Radial error describes circle size; it cannot replace 3D error, which also includes phase and height differences.
+| Program | Input | Output |
+| --- | --- | --- |
+| traj_publisher | Time and mode switch | Desired position, velocity, acceleration and yaw |
+| controller_node | Desired and actual states | Four rotor speeds |
+| ROS bridge + TESSE | Rotor commands | Actual vehicle state |
+| RViz | ROS state messages | Pose and frame display |
 
-The heading lag is consistent with the omission of angular-rate feedforward. In an approximate steady pure-yaw motion, angular damping must be balanced by the moment from a nonzero attitude error. With k_R=3, k_omega=1 and desired rate magnitude 0.5 rad/s, the estimated error magnitude is arcsin(1/6), about 9.59 degrees, close to the measured 9.524 degrees. This explains a plausible mechanism rather than identifying every source of error.
+During closed-loop flight, rotor commands come from the controller. R resets the simulated vehicle. The controller should be stopped before resetting, so old commands do not continue driving the vehicle.
 
-The bag contains 2,235 current-state messages, of which 2,233 aligned samples were used; desired states and rotor commands each contain 4,404 messages. Unequal counts alone do not establish packet loss. Every common-time sample was included without error-based rejection. The video lasts 40 s at 15 frames/s; wall-clock video time and bag simulation time were treated separately.
+## 2.3 Simulator and ROS Bridge
 
-### 4.3 Tuning and Measurement Limitations
+RViz is the observation window. The arrows and axes in Figure 4 represent state information rather than the physical vehicle shape. State updates and frame conventions were checked before tuning.
 
-The first problem was flipping. After that was reduced, the vehicle could hover but its sway still grew. Setting kr=3 and komega=1 softened the attitude corrections; kx=2 and kv=3 then removed the obvious hover sway. Larger gains were not automatically better: a correction could also overshoot. Table 4 records these debugging steps, rather than a controlled gain comparison. The final values worked in this setup; they were not shown to be optimal.
+![Figure 4. RViz world/base_link_gt frames and state display (original screenshot 04).](assets_current/screenshots/04_RViz显示world与base_link_gt坐标系及无人机状态.png)
 
-![Figure 3. Commanded rotor speeds; these are controller outputs, not independently measured rotor speeds.](assets_current/rotor_commands.png)
+Table 5. Frame conventions
 
-Table 6. Scope and limitations of the results
+| Name/convention | Meaning | Use here |
+| --- | --- | --- |
+| world | Axes fixed to the scene | Position and linear velocity use world coordinates |
+| base_link_gt | Axes moving with the vehicle | Represents body attitude |
+| Upward z | Increasing height is positive | Gravity compensation is +mg e3 |
+| Angular-rate conversion | Same rotation, expressed in different axes | omega=R^T omega_world |
 
-| Limitation | Effect on interpretation |
+R maps body vectors to world coordinates; R^T maps them back. This lab bridge supplies world-frame angular velocity, whereas the moment equation needs body-frame angular velocity. This is a convention of the teaching setup, not a rule for every ROS odometry message.
+
+## 2.4 State Display and Coordinate Frames
+
+The coding assignment has 11 missing blocks in controller_node.cpp. The trajectory formulas already exist in traj_publisher.cpp; that file only selects hover or circle mode. Table 6 maps the required blocks to their roles.
+
+Table 6. The 11 missing starter-code blocks
+
+| Block | Location | Role |
+| --- | --- | --- |
+| 01 | PART 1 | Declare subscribers, publisher, timer and state flags |
+| 02 | PART 2 | Connect the communication handles to callbacks |
+| 03 | PART 3.1 | Read desired position, velocity and acceleration |
+| 04 | PART 3.2 | Read desired yaw |
+| 05 | PART 4 | Read actual state and transform angular velocity |
+| 06 | PART 5.1 | Calculate position and velocity errors |
+| 07 | PART 5.2 | Construct the desired attitude from required force |
+| 08 | PART 5.3 | Calculate attitude and angular-rate errors |
+| 09 | PART 5.4 | Calculate thrust and three moments |
+| 10 | PART 5.5 | Solve for signed squared rotor speeds |
+| 11 | PART 5.6 | Take signed square roots and publish speeds |
+
+### D1: Five Interface Answers
+
+Table 7. D1 interface answers
+
+| Question | Core answer |
 | --- | --- |
-| One settled circle recording | Take-off, mode-switch transients and repeatability were not evaluated |
-| State header time versus desired receipt time | Message latency may affect instantaneous errors; timing uncertainty was not separately estimated |
-| No drag compensation or desired-rate feedforward | The observed performance cannot be credited to those changes |
-| Constants inherited from the starter code | Mass and inertia were not independently identified in this work |
-
-## 5 Conclusions
-
-After completing and tuning the controller, the vehicle could hover and track a circle. With kx=2, kv=3, kr=3 and komega=1, the 44.64 s run gave a 3D position RMSE of 10.52 cm and a yaw RMSE of 9.524 degrees. Frame directions, rotor numbering and correction strength needed particular care; building successfully was not enough. D2 included the configuration analysis and drag-compensation derivation, but compensation was not added to the flight code. The next step is to repeat matched trials, then test rate feedforward and drag compensation one at a time.
-
-## References
-
-[1] MIT VNAV. Lab 3 Exercises, 2023. https://vnav.mit.edu/labs_2023/lab3/exercises.html
-[2] MIT-SPARK. VNAV-labs, VNAV2021 release. https://github.com/MIT-SPARK/VNAV-labs/releases/tag/VNAV2021
-[3] Lee T, Leok M, McClamroch N H. Geometric Tracking Control of a Quadrotor UAV on SE(3). IEEE CDC, 2010: 5420-5425.
-[4] ROS geometry2, noetic-devel. https://github.com/ros/geometry2/tree/noetic-devel
-
-## Appendix A. D1 Conversions and D2A Rotor Analysis
-
-A quaternion represents attitude with four numbers. ROS fields and the Eigen constructor use different ordering conventions, so conversion interfaces help avoid manual ordering errors. The following conversions assume a valid unit quaternion; otherwise normalisation is needed.
+| A1 Message to tf2 | tf2::fromMsg(quat_msg, quat_tf); |
+| A2 tf2 to message | geometry_msgs::Quaternion quat_msg = tf2::toMsg(quat_tf); |
+| A3 Scalar component | quat_tf.w(); |
+| B1 Heading | tf2::getYaw(quat_t); |
+| B2 Rotation matrix | Use fromMsg with an Eigen quaternion, then toRotationMatrix() |
 
 ```cpp
-tf2::fromMsg(quat_msg, quat_tf);                  // A1
-geometry_msgs::Quaternion quat_msg = tf2::toMsg(quat_tf); // A2
-quat_tf.w();                                     // A3
-tf2::getYaw(quat_t);                              // B1
-Eigen::Quaterniond quat_e;                        // B2
+Eigen::Quaterniond quat_e;
 tf2::fromMsg(quat_msg, quat_e);
 Eigen::Matrix3d R = quat_e.toRotationMatrix();
 ```
 
-Include the headers for tf2_geometry_msgs, tf2/LinearMath/Quaternion.h, tf2/utils.h, tf2_eigen and Eigen/Geometry. The Eigen quaternion constructor takes (w,x,y,z); ROS messages expose the fields x, y, z and w.
+A quaternion represents orientation with four numbers. B2 assumes a valid unit quaternion; otherwise normalise it first. The Eigen constructor order is (w,x,y,z), which must not be confused with the ROS fields. The headers and complete answers are in deliverable_1.txt.
 
-Question A asks whether changing propellers 3 and 4 and reversing their rotation still allows independent position and heading control. Use the exercise numbering: in top view, x points right and y upward. Rotor positions are (-a,a), (-a,-a), (a,-a), (a,a), with a=d/sqrt(2). For u_i=omega_i squared, [f,tau_x,tau_y,tau_z]^T=Fu. This numbering is separate from the simulator numbering.
+## 2.5 Required Blocks and Attitude Interfaces
 
-![Figure A1. Exercise configurations a and b.](assets_current/drone_spinning.png)
-
-![Equation (A1). Allocation matrices for the two configurations.](assets_current/theory_matrices.png)
-
-Table A1. Configuration analysis for positive coefficients
-
-| Configuration | Result | Meaning |
-| --- | --- | --- |
-| a | rank=4; |det|=16a^2c_f^3c_d | Four independent control components |
-| b | rank=3; tau_z=-c_d tau_x/(a c_f) | Roll and yaw are coupled, not independently assignable |
-
-For positive a, c_f and c_d, the normal matrix has a nonzero determinant and rank 4. In configuration b, the first three rows are independent, but row 4 equals row 2 multiplied by -c_d/(a c_f), giving rank 3. Changing roll moment therefore forces a linked change in yaw moment. Position and yaw cannot be assigned independently in general. Special motions that satisfy this constraint may still be possible.
-
-## Appendix B. D2B Drag Model and Compensation
-
-Question B asks how the given drag model could improve tracking. Estimate the drag first, then ask the rotors for an opposing force. R maps body vectors to the world frame, so compute body velocity as v_b=R^T v before using the model.
-
-![Equation (B1)](assets_current/drag.png)
-
-D=diag(0.1,0.1,0.2). The product is component by component. Drag opposes the velocity and grows with its squared magnitude along each axis. With world z pointing upward, the force balance is:
-
-![Equation (B2)](assets_current/dynamics.png)
-
-Set e_x=x-x_d and e_v=v-v_d. Transform the estimated drag to the world frame and subtract it from the baseline force. Subtracting the external force requests a force in the opposite direction:
-
-![Equation (B3)](assets_current/compensation.png)
-
-Construct the desired attitude from the compensated force and project it onto the current thrust axis:
-
-![Equation (B4)](assets_current/orientation.png)
-
-If attitude tracking makes the thrust vector close to A, substitution into the force balance gives Equation (B5). A good estimate cancels most of the disturbance. Model error and noisy velocity leave a residual, so a flight comparison is still needed to establish any improvement.
-
-![Equation (B5)](assets_current/drag_error.png)
-
-Table B1. Derivation and proposed validation
-
-| Item | Scope in this work |
-| --- | --- |
-| Work completed | Derivation only; not added to the flight code or tested in a flight comparison |
-| How to check it | Keep the path, gains and initial state fixed; compare errors and commands with compensation on and off |
-
-## Appendix C. Completed Core Code
-
-The 11 completed solution blocks are grouped by the original PART 1 to PART 5: declarations, initialisation, two desired-state blocks, one current-state block, and six control/output blocks. The excerpts preserve the algorithm and add comments; class scaffolding and repeated starter comments are omitted. They are not standalone compilable files. The full source accompanies the report.
-
-### C.1 Communication and Desired-State Reading
+The excerpt covers blocks 01-04. Subscribers trigger the state callbacks, the publisher sends rotor commands, and the timer schedules control. Class scaffolding and repeated starter comments are omitted; the excerpt is not a standalone source file.
 
 ```cpp
 // PART 1: communication handles and startup state flags.
@@ -263,16 +172,19 @@ have_desired = xd.allFinite() && vd.allFinite() && ad.allFinite()
                && std::isfinite(yawd);
 ```
 
-Table C1. Communication and input checks
+Table 8. Desired-state handling
 
-| Block | Explanation |
+| Check | Reason |
 | --- | --- |
-| Subscriber / Publisher / Timer | Receive states, send commands and schedule control; queue size 1 retains the latest queued message. |
-| Empty-array checks | Check before accessing [0], avoiding out-of-range reads. |
-| Quaternion normalisation | Reject invalid or near-zero inputs before extracting yaw. |
-| have_desired | Allows startup after finite values are received; this is not a complete stale-message watchdog. |
+| Check arrays first | Accessing [0] of an empty array is invalid |
+| Validate and normalise quaternion | Avoids a zero or invalid attitude entering calculations |
+| have_desired | Allows control startup after a finite reference is received |
 
-## C.2 Current State and Desired Attitude
+## 2.6 Core Code: Communication and Reference Reading
+
+Blocks 05-07 turn state messages into control quantities. Errors are actual minus desired, so feedback terms have negative signs. Position feedback pulls back, velocity feedback damps the motion, and desired acceleration anticipates the force needed by the reference.
+
+![Equation (1)](assets_current/force.png)
 
 ```cpp
 // PART 4: inside onCurrentState(). Read position and velocity.
@@ -313,18 +225,17 @@ Rd.col(1) = b2d;
 Rd.col(2) = b3d;
 ```
 
-Table C2. Frame and sign checks
+The force direction sets desired body z. Desired yaw and cross products complete the other axes of R_d. Near-zero force and cross products are checked before normalisation.
 
-| Key statement | Explanation |
-| --- | --- |
-| R.transpose() * rate | R maps body to world; R transpose maps back. This follows this lab bridge angular-rate convention. |
-| -kx*ex - kv*ev | Errors are actual minus desired; negative feedback acts to reduce them. |
-| +m*g*e3 + m*ad | Compensates gravity and anticipates the required reference acceleration. |
-| Normalisation and cross products | Force sets body z; yaw sets heading; cross products complete the orthogonal frame. |
+These checks handle some invalid inputs and degenerate operations; they do not provide a complete stale-message timeout mechanism.
 
-These checks prevent some invalid inputs and degenerate calculations, but the code does not implement a complete fault-handling system, such as stale-state timeout handling. Startup checks should not be described as a guarantee of safety under all faults.
+## 2.7 Core Code: Actual State and Desired Force
 
-## C.3 Moments, Rotor Allocation and Publication
+Blocks 08-11 calculate the turning action and distribute thrust and moments among the rotors. Vee converts a skew matrix to a vector. Signed square roots preserve rotation signs; negative values must not all be clipped to zero in this simulator.
+
+![Equation (2)](assets_current/attitude.png)
+
+![Equation (3)](assets_current/moment.png)
 
 ```cpp
 // Constructor: build the allocation map ONCE using simulator numbering.
@@ -362,36 +273,263 @@ for (int i = 0; i < 4; ++i) {
 rotor_pub.publish(command);
 ```
 
-Table C3. Allocation checks
+Simulator rotor positions are (+x,+y), (-x,+y), (-x,-y), (+x,-y), with yaw signs +,-,+,-. The projected arm length is d/sqrt(2). Published speeds are in rad/s, not rpm or squared speed.
 
-| Key point | Explanation |
+The allowed simplification sets e_omega=omega and omits desired-rate feedforward. Mass, inertia and thrust coefficients were inherited from the source rather than independently calibrated.
+
+## 2.8 Core Code: Moments and Rotor Allocation
+
+After editing the source, catkin build was run again. Figure 2 checks the starter project; Figure 5 checks the completed code. A successful build establishes that the executable can be produced, not that the flight response is correct.
+
+![Figure 5. Successful workspace build after controller completion (original screenshot 05).](assets_current/screenshots/05_补全几何控制器后整个工作空间编译成功摘要.png)
+
+Table 9. Checks after completing the code
+
+| Check | Outcome |
 | --- | --- |
-| Rotor positions and signs | Simulation numbering: 1(+x,+y), 2(-x,+y), 3(-x,-y), 4(+x,-y); yaw signs +,-,+,-. |
-| Vee and moment law | Vee converts a skew matrix to a vector; attitude feedback corrects orientation and rate feedback damps rotation. |
-| signed_sqrt | Preserves the sign of u when taking its square root, following this simulator convention. |
-| Output length and units | Publish four angular velocities in rad/s, not rpm or squared speeds. |
+| Build summary | Eight packages succeeded; none failed |
+| Environment | Workspace setup.bash sourced after building |
+| Final gains | kx=2, kv=3, kr=3, komega=1 |
 
-The starter constants are retained: m=1, d=0.3, c_f=0.001, c_d=0.00001 and J=I. For J=I, omega cross (J omega) vanishes, but the term is retained to match the general rotational equation. Inline comments and Tables C1-C3 explain the role of each block.
+Changing launch parameters does not require a rebuild. Changing C++ or STATIC_POSE does: rebuild and restart the node, or the previous executable may still be running.
 
-## Appendix D. Original Experimental Screenshots
+## 2.9 Rebuilding the Completed Controller
 
-Five originals are selected: environment, simulator scene, completed-code build, hover height and circle display. The initial build and similar static RViz views are omitted here. All eight original screenshots remain in the materials folder.
+STATIC_POSE=1 selects a fixed target at (0,0,2) m and 45-degree yaw. Holding the reference still helps separate direction errors from overly aggressive gains. Figure 6 shows the pose display; Figure 7 checks height numerically.
 
-Repository: https://github.com/hbyhby123/vnav-personal
-Screenshot directory: lab3/data/raw/screenshots; checked revision: 9ea7853.
+![Figure 6. Desired and actual poses in hover mode (original screenshot 06).](assets_current/screenshots/06_STATIC_POSE定点模式下无人机期望与实际位姿对比.png)
 
-![Figure D1. Ubuntu and ROS versions and the Lab3 source directories.](assets_current/screenshots/01_Ubuntu20.04与ROS_Noetic版本及Lab3工作空间源码目录.png)
+![Figure 7. Hover height z=1.952798 m (original screenshot 06B).](assets_current/screenshots/06B_定点悬停实际位置与1.957米高度验证.png)
 
-![Figure D2. Initial vehicle scene after TESSE Unity startup.](assets_current/screenshots/03_TESSE_Unity仿真器启动后的无人机初始场景.png)
+Table 10. Meaning of the hover readings
 
-Figure D1 verifies the environment and paths. Figure D2 confirms simulator startup, not correct controller operation. Flight performance is assessed with the later state displays, video and bag data.
+| Reading | Interpretation |
+| --- | --- |
+| Target: 2 m | Requested height |
+| Figure 7: 1.952798 m | About 4.72 cm below the target |
+| Separate reading: 1.957025 m | A different instant, not the value in Figure 7 |
 
-## D.1 Build and Flight Evidence
+The original 06B filename contains 1.957, but its displayed value is 1.952798. The report uses the displayed reading. A snapshot is not a run-wide hover RMSE.
 
-![Figure D3. All eight packages built after controller completion.](assets_current/screenshots/05_补全几何控制器后整个工作空间编译成功摘要.png)
+## 2.10 Hovering: Establishing a Steady Baseline
 
-![Figure D4. Hover height z=1.952798 m; the 1.957 in the filename is not this reading.](assets_current/screenshots/06B_定点悬停实际位置与1.957米高度验证.png)
+After stable hovering, STATIC_POSE was changed to 0, the project rebuilt and the simulator reset before restarting control. Figure 8 records the RViz circle display. The video, rather than one screenshot, shows the continuous motion.
 
-![Figure D5. RViz circle display; see the video for continuous motion.](assets_current/screenshots/07_RViz无人机稳定圆轨迹跟踪与期望实际状态对比.png)
+![Figure 8. RViz circle display and desired/actual poses (original screenshot 07).](assets_current/screenshots/07_RViz无人机稳定圆轨迹跟踪与期望实际状态对比.png)
 
-Figure D3 checks the build; Figure D4 records a single height. The video checks continuous circling, while the bag supports run-wide error calculations. These sources answer different questions.
+Table 11. Reference and derivatives; units are m, m/s and m/s squared.
+
+| Axis | Position | Velocity | Acceleration |
+| --- | --- | --- | --- |
+| x | 5sin(t/2) | 2.5cos(t/2) | -1.25sin(t/2) |
+| y | 5cos(t/2) | -2.5sin(t/2) | -1.25cos(t/2) |
+| z | 2 | 0 | 0 |
+
+With yaw_d=-t/2, the reference has 5 m radius, 2 m height, 2.5 m/s horizontal speed and a period of about 12.57 s. Supplying position, velocity and acceleration lets the controller anticipate the force needed for the turn rather than only chase a position point.
+
+The arrows represent poses; their appearance is not a substitute for a data-derived path. The trajectory plot in the next section is calculated from bag positions.
+
+## 2.11 Circle Tracking: Moving the Reference
+
+### 3.1 Desired and Actual Paths
+
+The recording covers about 3.55 revolutions. Figure 9 compares actual and desired positions; Table 12 summarises the same data. The 3D error includes horizontal and vertical differences, not just circle size.
+
+![Figure 9. Actual and desired trajectories calculated from the bag.](assets_current/trajectory.png)
+
+Table 12. Circle-tracking statistics
+
+| Metric | Measured result |
+| --- | --- |
+| Common interval | ROS time 933.72-978.36 s; duration 44.64 s |
+| Position samples / revolutions | 2,233 / approximately 3.552 |
+| 3D position RMSE / mean error | 0.1052 m / 0.1049 m |
+| Maximum / 95th-percentile 3D error | 0.1166 m / 0.1134 m |
+| x / y / z RMSE | 0.0631 / 0.0632 / 0.0556 m |
+| Mean height / range | 1.9446 m / 1.9318-1.9570 m |
+| Mean radius / radial RMSE | 5.0466 m / 0.0466 m |
+| Yaw RMSE | 9.524 degrees |
+| Rotor command range | 29.17-63.60 rad/s |
+
+These values describe the settled recording, not every take-off transient or possible initial state.
+
+## 3 Results
+
+Reference and actual messages do not arrive together, so message number 100 should not simply be paired with message number 100. Time alignment comes first. Linear interpolation estimates the reference at an actual-state timestamp from its two neighbouring reference samples.
+
+Table 13. Time-alignment procedure
+
+| Step | Processing |
+| --- | --- |
+| 1 | Sort and deduplicate actual states by header timestamp |
+| 2 | Interpolate desired states using bag ROS receipt timestamps |
+| 3 | Use only the common interval, yielding 2,233 position samples |
+| 4 | Subtract desired position from actual position at each time |
+| 5 | Use all aligned samples without error-based rejection |
+
+![Equation (4)](assets_current/metrics.png)
+
+Table 14. Meaning of the metrics
+
+| Metric | Interpretation |
+| --- | --- |
+| 3D RMSE | Run-wide error measure that gives larger deviations more weight |
+| Mean error | Average length of the 3D error vector |
+| Maximum error | Largest single deviation in this recording |
+| 95th percentile | Approximately 95% of samples do not exceed this value |
+| Radial RMSE | Radius error only, not complete phase or height error |
+
+Yaw is unwrapped before interpolation, then its error is wrapped to [-pi,pi] to avoid a false jump at 180 degrees. The bag has 2,235 actual states, 4,404 references, 4,404 rotor commands and 2,203 clock messages. Unequal counts alone do not establish packet loss.
+
+The video contains 600 frames at 15 frames/s, or 40 s of wall time. The 44.64 s analysis interval uses ROS simulation time; the two clocks are reported separately.
+
+## 3.2 How the Errors Were Calculated
+
+Visually similar paths can still contain errors. Figure 10 separates axis, 3D and yaw errors so persistent offsets and short fluctuations are visible. Local spikes are retained rather than smoothed away for presentation.
+
+![Figure 10. Axis position errors, 3D error and yaw error.](assets_current/tracking_errors.png)
+
+Table 15. Main observations from the error plots
+
+| Observation | Supported conclusion |
+| --- | --- |
+| Position error does not grow continuously | No sustained divergence in this recording |
+| Mean height is 5.54 cm low | Near the target but still biased |
+| Mean radius is 4.66 cm too large | The flown circle is slightly larger |
+| Nearly constant yaw offset | Heading tracking has a persistent lag |
+
+Short fluctuations can also reflect the relationship between receipt times and timestamps. Timing delays were not independently measured, so every spike should not be interpreted as a sudden physical position jump.
+
+## 3.3 Error Histories
+
+Tuning progressed from flips to hovering with growing sway, then to no obvious sway. Stronger correction was not always better: a forceful response could overshoot. Table 16 records the debugging sequence, not a controlled comparison.
+
+Table 16. Three-stage tuning record
+
+| Stage | kx / kv / kr / komega | Observation |
+| --- | --- | --- |
+| Initial | 6 / 4 / 30 / 10 | Flips and large command changes |
+| Lower attitude gains | 6 / 4 / 3 / 1 | Hover achieved, but sway still grew |
+| Final | 2 / 3 / 3 / 1 | No obvious hover sway; circle flight recorded |
+
+![Figure 11. Commanded rotor speeds, not independently measured rotor speeds.](assets_current/rotor_commands.png)
+
+Table 17. Roles of the four gains
+
+| Gain | Final value | Role |
+| --- | --- | --- |
+| kx | 2 | Position correction toward the reference |
+| kv | 3 | Velocity damping |
+| kr | 3 | Attitude correction |
+| komega | 1 | Angular-rate damping |
+
+With source constants m=1 and c_f=0.001, ideal equal-speed hover gives sqrt[mg/(4c_f)]=49.52 rad/s, within the recorded range of 29.17-63.60 rad/s. This is a scale check, not parameter calibration. Trial conditions were not fully matched, so the final gains are not claimed to be optimal.
+
+## 3.4 Tuning and Rotor Commands
+
+### 4.1 D2A: Why Rotor Configuration Matters
+
+D2A compares the normal layout with one where propellers 3 and 4 are changed and their rotation reversed. The issue is not whether lift remains, but whether thrust and three moments can be set independently [1,3].
+
+![Figure 12. Normal configuration a and modified configuration b from the exercise.](assets_current/drone_spinning.png)
+
+For this question only, x points right and y upward; rotors lie at (-a,a), (-a,-a), (a,-a), (a,a), with a=d/sqrt(2). For u_i=omega_i squared, [f,tau_x,tau_y,tau_z]^T=Fu. c_f is the lift coefficient and c_d the yaw-moment coefficient. This numbering must not be copied directly into the simulator code.
+
+![Equation (5). Allocation matrices for the two configurations.](assets_current/theory_matrices.png)
+
+Table 18. Rotor-configuration analysis
+
+| Layout | Mathematical result | Control meaning |
+| --- | --- | --- |
+| a | rank=4; |det|=16a^2c_f^3c_d | Four independent control components |
+| b | rank=3; tau_z=-c_d tau_x/(a c_f) | Roll and yaw are linked |
+
+For positive a, c_f and c_d, configuration a has a nonzero determinant. In b, the first three rows are independent but row 4 is a fixed multiple of row 2, reducing the rank to 3. A roll change forces a yaw change. Arbitrary independent position and yaw tracking is therefore unavailable, although special motions satisfying the constraint may remain feasible.
+
+## 4 Discussion
+
+Drag acts against motion. If its direction and magnitude can be estimated, the desired force can include an opposing term. The exercise model uses body axes, so velocity must first be expressed in the body frame [1]:
+
+![Equation (6)](assets_current/drag.png)
+
+The product acts component by component. With world z upward, gravity, thrust and drag satisfy:
+
+![Equation (7)](assets_current/dynamics.png)
+
+With e_x=x-x_d and e_v=v-v_d, transform the estimated drag back to world coordinates and subtract it from the baseline force:
+
+![Equation (8)](assets_current/compensation.png)
+
+Use the compensated force for desired body z, and project onto the current thrust axis:
+
+![Equation (9)](assets_current/orientation.png)
+
+If attitude tracking makes the thrust vector close to A, substitution gives the approximate error dynamics:
+
+![Equation (10)](assets_current/drag_error.png)
+
+Table 19. Derivation versus implementation
+
+| Item | Scope in this work |
+| --- | --- |
+| Derivation | Completed; accurate estimation cancels most of the drag term |
+| Flight implementation | Not added; no compensation on/off comparison |
+| Proposed check | Hold path, gains and initial state fixed; compare errors and commands |
+
+Model error and velocity noise leave a residual. The formula alone does not guarantee improvement, and the measured 10.52 cm error in this run cannot be credited to drag compensation.
+
+## 4.2 D2B: Compensating for Drag
+
+Heading lag is the clearest remaining issue. Desired angular-rate feedforward was omitted, so sustained turning requires an attitude-error moment to balance angular damping. An approximate pure-yaw steady relation is:
+
+![Equation (11)](assets_current/yawsteady.png)
+
+Using kr=3, komega=1 and desired rate magnitude 0.5 rad/s gives 9.59 degrees, close to the measured 9.524 degrees. This supports a plausible mechanism; it is not a complete identification of every error source.
+
+Table 20. Limits of the conclusions
+
+| Evidence | What it supports | What it does not show |
+| --- | --- | --- |
+| 44.64 s settled circle | No sustained error growth in the run | Stability from every initial state |
+| Small height and radius offsets | Persistent tracking bias | Drag is the sole cause |
+| Less sway after tuning | The chosen setup performs the task | The gains are optimal on every computer |
+| Screenshots, video and bag | Process and statistics can be cross-checked | One screenshot proves a complete flight |
+
+### Useful Next Steps
+
+Table 21. Proposed improvements, not implemented
+
+| Change | Reason | Comparison |
+| --- | --- | --- |
+| Desired-rate feedforward | May reduce heading lag in sustained turns | Keep path/gains fixed and compare yaw error |
+| Drag compensation | May reduce bias from modelled external forces | Validate the model, then compare on/off |
+| Repeated trials and timing checks | Check repeatability and short fluctuations | Match initial state and retain timestamps and curves |
+
+## 4.3 Why Errors Remain
+
+The 11 controller blocks were completed and tuned in three stages, resulting in hovering and continuous circle tracking. Final gains were kx=2, kv=3, kr=3 and komega=1. The 44.64 s recording covers about 3.55 revolutions, with 3D position RMSE of 10.52 cm and yaw RMSE of 9.524 degrees. Flight was broadly steady, but height, radius and heading offsets remain.
+
+The main practical lesson is to verify frames, rotor numbering and units before tuning. A starter project can build without a finished controller, and a visually circular path can still be inaccurate. Screenshots document steps, video checks continuous motion, and the bag supports run-wide statistics.
+
+Table 22. Experiment deliverables
+
+| Deliverable | Purpose |
+| --- | --- |
+| deliverable_1.txt | Five D1 interface answers |
+| deliverable_2.pdf | English D2 derivations |
+| controller_pkg/ | Complete controller package |
+| RViz video | Documents continuous circle flight |
+| Report and analysis files | Explain implementation, measured outcomes and limits |
+
+D2B remains a derivation rather than an implemented flight improvement. No unrecorded trials or ideal estimates are presented as measurements. All eight original screenshots appear in the relevant sections.
+
+## References
+
+[1] MIT VNAV. Lab 3 Exercises, 2023. https://vnav.mit.edu/labs_2023/lab3/exercises.html
+[2] MIT-SPARK. VNAV-labs, VNAV2021 release. https://github.com/MIT-SPARK/VNAV-labs/releases/tag/VNAV2021
+[3] Lee T, Leok M, McClamroch N H. Geometric Tracking Control of a Quadrotor UAV on SE(3). IEEE CDC, 2010: 5420-5425.
+[4] ROS geometry2, noetic-devel. https://github.com/ros/geometry2/tree/noetic-devel
+
+Original screenshots: hbyhby123/vnav-personal, lab3/data/raw/screenshots. Aligned samples, metrics and the analysis script are in lab3/data/analysis. The screenshots and raw records can be checked against these files.
+
+## 5 Conclusions
