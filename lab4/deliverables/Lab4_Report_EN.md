@@ -359,3 +359,20 @@ next_point.velocities.push_back(velocity);
 next_point.accelerations.push_back(acceleration);
 desiredStatePub.publish(next_point);
 ```
+
+## Appendix B. Experimental screenshots archived on GitHub
+
+Figures 1 and 2 use original screenshots 04 and 07. The six remaining screenshots below come from this experiment in data/raw/screenshots and retain their original content, matching the GitHub archive.
+
+![Figure 7. Environment and workspace; Section 2 (original screenshot 01)](../data/raw/screenshots/01_Lab4实验环境_Ubuntu20.04_ROSNoetic与工作空间目录.png)
+
+![Figure 8. All 20 packages compiled; preparation in Table 3 (original screenshot 02)](../data/raw/screenshots/02_Lab4四个Part补全后20个ROS包全部编译成功.png)
+
+![Figure 9. Simulator and gate-data paths; Section 2 (original screenshot 03)](../data/raw/screenshots/03_Lab4模拟器路径_可执行文件与赛门数据目录确认.png)
+
+![Figure 10. Hovering reference, actual position, and gains; Tables 4 and 1 (original screenshot 05)](../data/raw/screenshots/05_首门悬停验证_期望位置与实际位置及四个控制器增益.png)
+
+![Figure 11. Scene during the race; Section 3.2 (original screenshot 06)](../data/raw/screenshots/06_Lab4竞速过程_无人机穿越中间赛门画面.png)
+
+![Figure 12. Recorded bag information and topic counts; Section 2.3 (original screenshot 08)](../data/raw/screenshots/08_完整通关rosbag检查_记录时长与状态话题消息数量.png)
+

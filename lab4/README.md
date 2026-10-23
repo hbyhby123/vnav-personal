@@ -47,8 +47,8 @@
 | **直接交付入口** | **内容** | **状态** |
 | --- | --- | --- |
 | [助教验收讲解PDF](deliverables/Lab4_助教验收讲解提纲_黄博宇.pdf) | 3页，开场介绍、演示顺序、实测结果、常见问答 | 可直接照着讲解 |
-| [English report](deliverables/Lab4_Report_EN_Boyu_Huang.pdf) | 14页英文版，与中文版数据和结论一致 | 按所给模板组织，含代码注释 |
-| [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 12页中文版，含核心代码注释、6幅图与7张表 | 已生成并检查全部页面 |
+| [English report](deliverables/Lab4_Report_EN_Boyu_Huang.pdf) | 18页英文版，与中文版数据和结论一致 | 按所给模板组织，含代码注释 |
+| [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 16页中文版，含核心代码注释、12幅图与7张表 | 已生成并检查全部页面 |
 | [D1理论PDF](deliverables/deliverable_1.pdf) | 2页，单段轨迹全部小问 | 已精确核验 |
 | [D2理论PDF](deliverables/deliverable_2.pdf) | 2页，约束计数与r阶推广 | 假设与自然条件明确 |
 | [完整运行视频预览](data/raw/run_20261022_000059/race_preview.mp4) | 160.75秒，约10.8MB | 连续缩放重编码，不剪辑、不加速 |
@@ -56,7 +56,7 @@
 | [原始bag](data/raw/run_20261022_000059/race.bag) | 原样保存5个话题 | 两个必需状态话题均非零 |
 | [8张原图](data/raw/screenshots/README.md) | 连续编号01至08 | 内容与数字未修改 |
 | [指标与复算](data/analysis/README.md) | JSON、CSV、4幅图与脚本 | 可从原bag独立复算 |
-| [操作与演示](review/操作与演示.md) | 新环境准备与所有程序关闭后的完整启动 | 当前已有环境直接看B部分 |
+| [操作与演示](review/操作与演示.md) | 新环境准备与所有程序关闭后的完整启动 | 当前已有环境按[现场演示](review/操作与演示.md)操作 |
 | [复习速记](review/复习速记.md) | 文件角色、算法主线、参数、结果与理论要点 | 检查前快速阅读 |
 
 ## 环境与快速开始
@@ -64,7 +64,7 @@
 | **步骤** | **命令 / 操作** | **说明** |
 | --- | --- | --- |
 | 运行环境 | Ubuntu20.04.6、ROS Noetic、VNAV2021、TESSE Lab4 | 仿真器和ROS本体不在仓库中 |
-| 新环境 | 先看[操作手册A部分](review/操作与演示.md) | 只取code和review；先复制三包再配依赖 |
+| 新环境 | 将三个代码包放入工作空间后运行review/scripts/setup_dependencies.sh | 只取code和review；先复制三包再配依赖 |
 | 终端1 | source ~/lab4_evidence/sim.env；cd "$(dirname "$SIM_EXEC")"；"$SIM_EXEC" | 分三条执行；打开Unity后按R复位 |
 | 终端2 | source /opt/ros/noetic/setup.bash；source ~/vnav_ws/devel/setup.bash；roslaunch tesse_ros_bridge tesse_quadrotor_bridge.launch | 分三条执行，桥接连接仿真和ROS |
 | 首门测试 | roslaunch planner_pkg static_point_test.launch simulator_data_directory:="$SIM_DATA" | 新终端先source工作空间与sim.env；成功后Ctrl+C停止 |

@@ -134,7 +134,8 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
             path = (HERE/match[2]).resolve()
             with PILImage.open(path) as im:
                 width, height = im.size
-            scale = min(WIDTH/width, 255/height)
+            max_height = 520 if height > width else 300 if "05_" in path.name else 255
+            scale = min(WIDTH/width, max_height/height)
             story.append(KeepTogether([Image(str(path), width=width*scale, height=height*scale, hAlign='CENTER'),
                           paragraph(match[1], 'caption')]))
         elif line.startswith('表') or re.match(r'Table [A-Z0-9]', line):
