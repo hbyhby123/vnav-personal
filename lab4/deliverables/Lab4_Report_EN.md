@@ -249,7 +249,7 @@ Table 10. Proposed checks; not yet performed
 
 The four parts now form a complete sequence: hold a fixed target, read the actual start, plan position and yaw, and publish the reference by elapsed time. One saved run completed the course. Execution-only position RMSE was 5.64cm, with a maximum error of 8.44cm. Horizontal errors were small; a persistent downward offset dominated the position error. Its cause has not been isolated.
 
-The next step is to keep the route and time scale fixed while investigating height error. Faster settings should then be compared over repeated runs. Code, original video, the bag, and screenshots are archived. Both individual theory deliverables are in English. The required public Drive/Dropbox media links remain [to be completed].
+The next step is to keep the route and time scale fixed while investigating height error. Faster settings should then be compared over repeated runs. Code, original video, the bag, and screenshots are archived. Both individual theory deliverables are in English. The video and bag file will be uploaded directly to the assignment platform alongside the report and code; external media links are not required for this submission.
 
 ## References
 

@@ -39,7 +39,7 @@
 | [data/](data/README.md) | 原始证据与可复算分析 | raw保原件，analysis存派生结果 |
 | [deliverables/](deliverables/README.md) | 正式报告、个人题与可编辑原稿 | 7份PDF及重建源码 |
 | [review/](review/README.md) | 操作、复习和脚本 | 只保留两份主说明，避免多份过时教程 |
-| [rviz_drone_race.txt](rviz_drone_race.txt) | 真实GitHub媒体入口和正式平台链接状态 | Drive/Dropbox尚待补；不伪造公开链接 |
+| [rviz_drone_race.txt](rviz_drone_race.txt) | GitHub媒体归档入口与直接提交说明 | 视频和bag直接提交作业平台，本文件无需提交 |
 | [README.md](README.md) | 本层总览 | 任务、交付、运行、结果和原理 |
 | [.gitignore](.gitignore) | 忽略本机分析缓存与还原视频副本 | 防止重复加入超过100MB的原视频 |
 | [.gitattributes](.gitattributes) | 标记二进制与Shell换行 | 避免二进制差异噪声，Shell保持LF |
@@ -83,7 +83,7 @@
 ```text
 lab4/
 ├── README.md                     总览与真实状态
-├── rviz_drone_race.txt            视频与bag入口，标记正式平台链接待补
+├── rviz_drone_race.txt            视频与bag归档入口及直接提交说明
 ├── code/
 │   ├── controller_pkg/            实际运行的Lab3控制器完整包
 │   ├── planner_pkg/               赛门读取与首门悬停完整包
@@ -147,7 +147,7 @@ lab4/
 | 学生 | 黄博宇，24020036026，中外计科一班，第8组 |
 | 文档日期 | 2026年10月22日；运行目录与原机器时间字符串保持不变 |
 | 个人与团队提交 | 按老师要求分别提交；GitHub归档不等于正式提交回执 |
-| 正式媒体链接 | Drive/Dropbox公开视频与bag链接仍待本人提供，rviz_drone_race.txt已真实标记 |
+| 正式媒体链接 | 视频和bag直接上传作业平台，无需网盘链接 |
 | 原视频 | 分片保存只是解决单文件大小，不损失原始字节；预览是额外派生文件 |
 | 课程要求 | [MIT Lab4题面](https://vnav.mit.edu/labs_2023/lab4/exercises.html) |
 | 代码基线 | [VNAV2021](https://github.com/MIT-SPARK/VNAV-labs/tree/VNAV2021/lab4) |
