@@ -6,7 +6,7 @@ Recorded experiment: 22 October 2026; Report revision: 23 October 2026
 
 ## Summary
 
-I connected the Lab3 controller to the Lab4 trajectory generator, tested hovering at the first gate, and recorded one complete course run. The planner started at the measured state, passed through 12 gate targets, and sent position, velocity, acceleration, and yaw references at 50Hz. Time-aligned bag data gave an execution-only position RMSE of 5.64cm and a maximum error of 8.44cm. Height was the main source of position error: the vehicle averaged 5.47cm below its reference. This run confirms that the programs work together. It does not establish the cause of the height offset or the benefit of faster timing.
+My responsibility was to run the complete Lab4 workflow: connect the Lab3 controller, check hovering at the first gate, complete the course, and save the code, screenshots, video, and message records. The planner started at the measured position, passed through 12 gate targets, and sent position, velocity, acceleration, and heading references at 50Hz. Record analysis gave an execution-only position RMSE (a measure of overall tracking error) of 5.64cm and a maximum error of 8.44cm. The vehicle averaged 5.47cm below its target height. This small height offset did not prevent completion of this run, so correcting it was outside this workflow check; this does not imply that it is negligible for precision tracking. Speed improvement is not assessed at this stage. The group will work together on faster flight and performance tuning later.
 
 ## 1 Introduction
 
@@ -14,7 +14,7 @@ Lab3 follows a reference. Lab4 decides what that reference should be over time. 
 
 I first checked the coordinate and control chain at the first gate, then ran the full trajectory. The planner acts as a route guide, supplying position and heading. The controller acts as the driver, using feedback to correct deviations and adjust rotor speeds. This repeated correction is closed-loop control. [1,2]
 
-The work covered Part0 and Parts1.1-1.3, two individual theory exercises, and the video, screenshots, and message records needed to inspect the result. Reliable completion was the goal. No repeated search for the fastest settings was carried out.
+The work covered Part0 and Parts1.1-1.3, two individual theory exercises, and the video, screenshots, and message records needed to inspect the result. My responsibility was to complete the workflow. Faster flight and performance tuning will be a joint group task, so this report does not compare the fastest settings.
 
 ## 2 Experimental Set-up
 
