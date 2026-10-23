@@ -6,7 +6,7 @@ Recorded experiment: 22 October 2026; Report revision: 23 October 2026
 
 ## Summary
 
-My responsibility was to run the complete Lab4 workflow: connect the Lab3 controller, check hovering at the first gate, complete the course, and save the code, screenshots, video, and message records. The planner started at the measured position, passed through 12 gate targets, and sent position, velocity, acceleration, and heading references at 50Hz. Record analysis gave an execution-only position RMSE (a measure of overall tracking error) of 5.64cm and a maximum error of 8.44cm. The vehicle averaged 5.47cm below its target height. This small height offset did not prevent completion of this run, so correcting it was outside this workflow check; this does not imply that it is negligible for precision tracking. Speed improvement is not assessed at this stage. The group will work together on faster flight and performance tuning later.
+This experiment completed the full workflow from hovering at the first gate and planning a trajectory to flying the entire course. The program used the Lab3 controller, started at the measured position, passed through 12 gate targets, and sent position, velocity, acceleration, and heading references at 50Hz. During trajectory execution, the mean target height was 2.53m. The actual height averaged 5.47cm below the target, a relative offset of approximately 2.16%, which did not prevent completion of this run. I verified the workflow and saved the code, screenshots, video, and message records to support repeat runs and group work. The group will jointly work on faster flight and performance tuning in the next stage.
 
 ## 1 Introduction
 
