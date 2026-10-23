@@ -12,13 +12,15 @@ I connected the Lab3 controller to the Lab4 trajectory generator, tested hoverin
 
 Lab3 follows a reference. Lab4 decides what that reference should be over time. Hovering needs one fixed target; flying through gates needs a timed route. Passing the next gate position directly to the controller would not specify how to move between gates.
 
-I first checked the coordinate and control chain at the first gate, then ran the full trajectory. The planner supplies position and heading. The controller uses the measured state to correct deviations and adjust rotor speeds. This repeated correction is closed-loop control. [1,2]
+I first checked the coordinate and control chain at the first gate, then ran the full trajectory. The planner acts as a route guide, supplying position and heading. The controller acts as the driver, using feedback to correct deviations and adjust rotor speeds. This repeated correction is closed-loop control. [1,2]
 
 The work covered Part0 and Parts1.1-1.3, two individual theory exercises, and the video, screenshots, and message records needed to inspect the result. Reliable completion was the goal. No repeated search for the fastest settings was carried out.
 
 ## 2 Experimental Set-up
 
 Table 1 lists the configuration used for this recording. The reported statistics all come from that run, rather than a mixture of parameter settings.
+
+![Figure 1. Environment and workspace (original screenshot 01)](../data/raw/screenshots/01_Lab4实验环境_Ubuntu20.04_ROSNoetic与工作空间目录.png)
 
 Table 1. Environment and operating parameters
 
@@ -32,6 +34,8 @@ Table 1. Environment and operating parameters
 | Timing estimates | v_max=8.0; a_max=4.0 | Estimate segment times; not enforced flight limits |
 | Position and yaw dimensions | 3 and 1 | Plan XYZ and heading separately |
 | Polynomial coefficients | N=10 | At most degree nine per segment |
+
+![Figure 2. Simulator and gate-data paths (original screenshot 03)](../data/raw/screenshots/03_Lab4模拟器路径_可执行文件与赛门数据目录确认.png)
 
 ROS is the framework used to exchange messages between programs. A program is called a node, and a named message channel is a topic. The bridge publishes the simulated state on /current_state. The gate publisher supplies target poses. The trajectory node combines those targets with the current vehicle state and publishes /desired_state. The controller then sends /rotor_speed_cmds back to the simulator.
 
@@ -48,7 +52,7 @@ Table 2. Implementation and design choices
 | Part1.2 | Add start and gate constraints; optimize position and yaw separately | Reach targets while coordinating heading |
 | Part1.3 | Sample by elapsed time and publish the reference state | Convert a complete trajectory into a current control target |
 
-Yaw is the horizontal heading angle. Its numerical value wraps at plus or minus 180 degrees. A change from 179 to -179 degrees requires only a 2-degree rotation. The implementation uses atan2(sin delta_psi, cos delta_psi) to select the short change between consecutive headings and accumulates these changes into a continuous sequence. This prevents an unnecessary near-full turn.
+Yaw is the horizontal heading angle, like a compass direction for the vehicle. Its numerical value wraps at plus or minus 180 degrees. A change from 179 to -179 degrees requires only a 2-degree rotation. The implementation uses atan2(sin delta_psi, cos delta_psi) to select the short change between consecutive headings and accumulates these changes into a continuous sequence. This prevents an unnecessary near-full turn.
 
 Position has three components, whereas yaw has one. The optimizations are separate but use the same segment times, so the position and heading references reach each gate at the same planned instant. The initial position and yaw come from the current state. Start and end conditions use makeStartOrEnd; intermediate gates constrain position and yaw. Roll and pitch are handled by the controller rather than prescribed as separate route trajectories.
 
@@ -59,6 +63,8 @@ At each update, sampling time is the current ROS time minus the trajectory start
 ### 2.2 Procedure
 
 Basic control was checked before the complete recorded run.
+
+![Figure 3. All 20 ROS packages compiled after completing the four parts (original screenshot 02)](../data/raw/screenshots/02_Lab4四个Part补全后20个ROS包全部编译成功.png)
 
 Table 3. Procedure and checks
 
@@ -72,11 +78,13 @@ Table 3. Procedure and checks
 
 Resetting Unity alone does not clear the trajectory stored in the follower. A repeat run therefore also requires restarting that node. Repeated gate messages do not regenerate an existing trajectory; this prevents normal flight from being repeatedly restarted.
 
-![Figure 1. First-gate hovering test with a fixed reference](../data/raw/screenshots/04_Part0首门悬停成功_无人机在第一道赛门附近稳定保持.png)
+![Figure 4. Stable hovering near the first gate checks basic control (original screenshot 04)](../data/raw/screenshots/04_Part0首门悬停成功_无人机在第一道赛门附近稳定保持.png)
 
 ### 2.3 Recording and data processing
 
 The analyzed recording is run_20261022_000059. A bag file stores ROS messages with their recording times. This file contains 40,534 messages, including 8,365 actual-state messages and 7,836 desired-state messages. It also retains the simulation clock, gate targets, and rotor commands.
+
+![Figure 5. Saved recording and bag topics include actual and desired states (original screenshot 08)](../data/raw/screenshots/08_完整通关rosbag检查_记录时长与状态话题消息数量.png)
 
 The two state streams contain different message counts, so subtracting entries by array index would be inappropriate. Desired positions were linearly interpolated to actual-state recording times: adjacent reference values were used to estimate the value at an intermediate instant. Yaw was unwrapped before interpolation. The trajectory origin was estimated from recording time minus elapsed trajectory time during advancing samples. The final hold was excluded, leaving 6,708 execution samples.
 
@@ -130,9 +138,13 @@ Table 6. One first-gate position snapshot, in metres
 | Y | 3.1652320 | 3.1652690 | +0.0000370 |
 | Z | 2.6700000 | 2.6304210 | -0.0395790 |
 
+![Figure 6. Hovering position readings and gains, corresponding to Tables 6 and 1 (original screenshot 05)](../data/raw/screenshots/05_首门悬停验证_期望位置与实际位置及四个控制器增益.png)
+
 ### 3.2 Complete course run
 
-The saved continuous video records one complete course run. Figure 2 shows the scene after the final gate. There were 12 gate targets, excluding the current position added as the start vertex.
+The saved continuous video records one complete course run. Figure 8 shows the scene after the final gate. There were 12 gate targets, excluding the current position added as the start vertex.
+
+![Figure 7. Passing a gate during the run; the continuous video retains the full sequence (original screenshot 06)](../data/raw/screenshots/06_Lab4竞速过程_无人机穿越中间赛门画面.png)
 
 Table 7. Results during trajectory execution
 
@@ -148,15 +160,17 @@ Table 7. Results during trajectory execution
 | Maximum / mean actual speed | 1.6292 / 0.7125m/s |
 | Accumulated sampled path length | 95.570m |
 
-![Figure 2. Scene after the final gate; passage is assessed from the continuous video](../data/raw/screenshots/07_Lab4完整通关_通过最后一道赛门后的画面.png)
+![Figure 8. Scene after the final gate; completion is assessed from the continuous video (original screenshot 07)](../data/raw/screenshots/07_Lab4完整通关_通过最后一道赛门后的画面.png)
 
-![Figure 3. Desired and actual trajectories in the horizontal plane](../data/analysis/trajectory_xy.png)
+![Figure 9. Horizontal trajectory comparison: desired and actual paths](../data/analysis/trajectory_xy.png)
 
-![Figure 4. Desired and actual XYZ positions over time](../data/analysis/position_tracking.png)
+![Figure 10. Three-dimensional paths and gate centres show position and height changes](../data/analysis/trajectory_3d.png)
 
-![Figure 5. Three-dimensional and per-axis position errors](../data/analysis/tracking_error.png)
+![Figure 11. XYZ position over time shows tracking along each axis](../data/analysis/position_tracking.png)
 
-![Figure 6. Per-axis position RMSE over the execution interval](../data/analysis/axis_rmse_comparison.png)
+![Figure 12. Position errors over time show the dominant height offset](../data/analysis/tracking_error.png)
+
+![Figure 13. Per-axis position RMSE: vertical error exceeds horizontal error](../data/analysis/axis_rmse_comparison.png)
 
 ### 3.3 Duration measurements
 
@@ -419,24 +433,3 @@ next_point.velocities.push_back(velocity);
 next_point.accelerations.push_back(acceleration);
 desiredStatePub.publish(next_point);
 ```
-
-## Appendix B. Experimental screenshots archived on GitHub
-
-Figures 1 and 2 use original screenshots 04 and 07. The six remaining screenshots below come from this experiment in data/raw/screenshots and retain their original content, matching the GitHub archive.
-
-![Figure 7. Environment and workspace; Section 2 (original screenshot 01)](../data/raw/screenshots/01_Lab4实验环境_Ubuntu20.04_ROSNoetic与工作空间目录.png)
-
-![Figure 8. All 20 packages compiled; preparation in Table 3 (original screenshot 02)](../data/raw/screenshots/02_Lab4四个Part补全后20个ROS包全部编译成功.png)
-
-![Figure 9. Simulator and gate-data paths; Section 2 (original screenshot 03)](../data/raw/screenshots/03_Lab4模拟器路径_可执行文件与赛门数据目录确认.png)
-
-![Figure 10. Hovering reference, actual position, and gains; Tables 6 and 1 (original screenshot 05)](../data/raw/screenshots/05_首门悬停验证_期望位置与实际位置及四个控制器增益.png)
-
-![Figure 11. Scene during the race; Section 3.2 (original screenshot 06)](../data/raw/screenshots/06_Lab4竞速过程_无人机穿越中间赛门画面.png)
-
-![Figure 12. Recorded bag information and topic counts; Section 2.3 (original screenshot 08)](../data/raw/screenshots/08_完整通关rosbag检查_记录时长与状态话题消息数量.png)
-
-
-## Appendix C. Three-dimensional trajectory
-
-![Figure 13. Three-dimensional paths and gate centres; useful for viewing height changes, not an independent gate-passage test](../data/analysis/trajectory_3d.png)

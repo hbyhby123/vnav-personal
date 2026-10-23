@@ -47,8 +47,8 @@
 | **直接交付入口** | **内容** | **状态** |
 | --- | --- | --- |
 | [助教验收讲解PDF](deliverables/Lab4_助教验收讲解提纲_黄博宇.pdf) | 3页，开场介绍、演示顺序、实测结果、常见问答 | 可直接照着讲解 |
-| [English report](deliverables/Lab4_Report_EN_Boyu_Huang.pdf) | 20页英文版，与中文版数据和结论一致 | 按所给模板组织，含代码注释 |
-| [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 19页中文版，含核心代码注释、13幅图与11张表 | 已生成并检查全部页面 |
+| [English report](deliverables/Lab4_Report_EN_Boyu_Huang.pdf) | 18页英文版，与中文版数据和结论一致 | 按所给模板组织，含代码注释 |
+| [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 18页中文版，含核心代码注释、13幅图与11张表 | 已生成并检查全部页面 |
 | [D1中文理论PDF](deliverables/deliverable_1_CN.pdf) | 2页，单段轨迹优化中文解释 | 与英文版结果一致 |
 | [D2中文理论PDF](deliverables/deliverable_2_CN.pdf) | 2页，多段轨迹连接与计数 | 与英文版条件一致 |
 | [D1理论PDF](deliverables/deliverable_1.pdf) | 英文2页，单段轨迹全部小问 | 已精确核验 |
