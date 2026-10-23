@@ -151,5 +151,4 @@ lab4/
 | 原视频 | 分片保存只是解决单文件大小，不损失原始字节；预览是额外派生文件 |
 | 课程要求 | [MIT Lab4题面](https://vnav.mit.edu/labs_2023/lab4/exercises.html) |
 | 代码基线 | [VNAV2021](https://github.com/MIT-SPARK/VNAV-labs/tree/VNAV2021/lab4) |
-| 辅助说明 | 理论、代码准备、分析与整理使用AI辅助；运行、视频和截图来自用户Ubuntu |
 | [返回仓库总览](../README.md) | 查看Lab1至Lab4入口 |
