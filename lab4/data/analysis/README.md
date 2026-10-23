@@ -14,6 +14,8 @@
 
 | **文件 / 目录** | **作用** |
 | --- | --- |
+| [axis_rmse_comparison.png](axis_rmse_comparison.png) | 从既有metrics绘制各轴RMSE柱状图，单位cm |
+| [build_axis_comparison.py](build_axis_comparison.py) | 生成各轴误差对比图，未新增测量数据 |
 | [aligned_states.csv](aligned_states.csv) | 实际与期望对齐后的逐点数据 |
 | [analyze_run.py](analyze_run.py) | 从bag复算统计与四幅图 |
 | [desired_states.csv](desired_states.csv) | 期望状态与time_from_start原始提取 |
@@ -43,7 +45,7 @@
 | **方向** | **内容** | **格式 / 示例** |
 | --- | --- | --- |
 | 输入 | ../raw/run_20261022_000059/race.bag | ROS1 bag |
-| 输出 | metrics.json、3个状态/航点CSV与中心距离CSV | 四幅PNG图及理论JSON |
+| 输出 | metrics.json、3个状态/航点CSV与中心距离CSV | 四幅轨迹PNG、1幅RMSE对比图及理论JSON |
 
 ## 参数说明
 

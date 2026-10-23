@@ -147,6 +147,7 @@ d2=[P('Lab4 多段轨迹优化理论解答','title'),P('Deliverable 2  |  黄博
 build('deliverable_2.pdf',d2)
 
 # The main report now renders directly from its editable Markdown source.
-from render_readable_report import build_readable_report
-build_readable_report()
-print('Created 3 PDFs under', OUT)
+from render_template_reports import build_template_report
+build_template_report()
+build_template_report('Lab4_Report_EN.md', 'Lab4_Report_EN_Boyu_Huang.pdf', english=True)
+print('Created 4 report/theory PDFs under', OUT)
