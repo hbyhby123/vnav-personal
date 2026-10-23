@@ -17,7 +17,7 @@
 | --- | --- | --- |
 | [Lab1](lab1/README.md) | 基础练习、C++源码、构建配置、报告与截图 | [实验报告PDF](lab1/report/Lab1_实验报告_黄博宇_完整版.pdf) |
 | [Lab2](lab2/README.md) | 双无人机ROS包、坐标变换推导、报告与截图 | [完整实验报告](lab2/Lab2_实验报告.md) |
-| [Lab3](lab3/README.md) | 控制器、理论题、报告、视频、数据与复习资料 | [实验报告PDF](lab3/deliverables/Lab3_实验报告_黄博宇.pdf) |
+| [Lab3](lab3/README.md) | 控制器、理论题、报告、视频、数据与复习资料 | [实验报告PDF](lab3/deliverables/Lab3_Report_EN_Huang_Boyu.pdf) |
 | [Lab4](lab4/README.md) | 竞速源码、个人理论、报告、原始证据与复算分析 | [实验报告PDF](lab4/deliverables/Lab4_实验报告_黄博宇.pdf) |
 
 ## 环境与快速开始

@@ -46,13 +46,13 @@
 | [submission/](submission/README.md) | 最终交付ZIP：英文报告、D1、D2、代码、视频 | 与桌面最终版一致 |
 | [code/](code/README.md) | 最终代码和原始代码对照 | 进入下层查看逐文件清单 |
 | [data/](data/README.md) | 原始记录与离线分析结果 | 进入下层查看逐文件清单 |
-| [deliverables/](deliverables/README.md) | 正式报告和个人理论题 | 进入下层查看逐文件清单 |
+| [deliverables/](deliverables/README.md) | 最终中英文报告和个人理论题 | 进入下层查看逐文件清单 |
 | [review/](review/README.md) | 完整操作、复习要点与实用脚本 | 进入下层查看逐文件清单 |
 | [README.md](README.md) | 本层任务、文件、输入输出、参数和原理说明 | 说明文件 |
 
 | **实际交付文件** | **作用** | **说明** |
 | --- | --- | --- |
-| [英文实验报告PDF](deliverables/Lab3_Report_EN_Huang_Boyu.pdf) | 20页完善版；唯一提交报告 | 已完成 |
+| [英文实验报告PDF](deliverables/Lab3_Report_EN_Huang_Boyu.pdf) | 最终英文版20页；本次提交报告 | 已完成 |
 | [deliverables/deliverable_1.txt](deliverables/deliverable_1.txt) | 个人D1五问 | 已准备 |
 | [deliverables/deliverable_2.pdf](deliverables/deliverable_2.pdf) | 个人D2英文推导 | 2页PDF |
 | [完整controller_pkg](code/controller_pkg/README.md) | 团队控制器源码 | 保持整包，不只交cpp |
@@ -76,8 +76,7 @@
 ```text
 lab3/
 ├── README.md                 总览、任务和快速开始
-├── deliverables/             正式报告、D1、D2与可编辑原稿
-│   └── assets/equations/     文稿引用的公式图
+├── deliverables/             最终中英文报告与D1、D2答案
 ├── review/                   操作手册与复习速记
 │   └── scripts/              安装和录制脚本
 ├── data/
