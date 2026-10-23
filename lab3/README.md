@@ -1,5 +1,7 @@
 # Lab3 无人机轨迹生成与跟踪控制
 
+**最终交付入口：[英文版提交包](submission/README.md)。仅交最新英文报告，D2为英文版；视频公开链接仍待补充。**
+
 ## 项目简介
 
 这个实验让仿真无人机先在固定位置悬停，再沿圆轨迹飞行。控制器相当于自动驾驶员：比较目标与实际状态，持续调整四个旋翼的转速。
@@ -39,6 +41,7 @@
 
 | **文件 / 目录** | **作用** | **说明** |
 | --- | --- | --- |
+| [submission/](submission/README.md) | 最终交付ZIP：英文报告、D1、D2、代码、视频 | 与桌面最终版一致 |
 | [code/](code/README.md) | 最终代码和原始代码对照 | 进入下层查看逐文件清单 |
 | [data/](data/README.md) | 原始记录与离线分析结果 | 进入下层查看逐文件清单 |
 | [deliverables/](deliverables/README.md) | 正式报告和个人理论题 | 进入下层查看逐文件清单 |
@@ -47,9 +50,9 @@
 
 | **实际交付文件** | **作用** | **说明** |
 | --- | --- | --- |
-| [实验报告PDF](deliverables/Lab3_实验报告_黄博宇.pdf) | 10页正式报告 | 已完成 |
+| [英文实验报告PDF](deliverables/Lab3_Report_EN_Huang_Boyu.pdf) | 13页完善版；唯一提交报告 | 已完成 |
 | [deliverables/deliverable_1.txt](deliverables/deliverable_1.txt) | 个人D1五问 | 已准备 |
-| [deliverables/deliverable_2.pdf](deliverables/deliverable_2.pdf) | 个人D2推导 | 2页PDF |
+| [deliverables/deliverable_2.pdf](deliverables/deliverable_2.pdf) | 个人D2英文推导 | 2页PDF |
 | [完整controller_pkg](code/controller_pkg/README.md) | 团队控制器源码 | 保持整包，不只交cpp |
 | [RViz视频](data/raw/circle_20261021_081755/V01_RViz_circle_20261021_081755.mp4) | 连续飞行记录 | 40秒 |
 | rviz_drone_flight.txt | 填写Drive/Dropbox公开链接 | 尚待真实链接；当前没有这个文件 |
@@ -59,7 +62,7 @@
 | **步骤** | **命令 / 操作** | **说明** |
 | --- | --- | --- |
 | 环境 | Ubuntu20.04.6、ROS Noetic、catkin_tools、TESSE、RViz | ROS是程序消息协作框架；RViz是观察窗口，TESSE是仿真场地 |
-| 先准备 | 新环境先看[操作手册D部分](review/操作与演示.md) | 本仓库不包含ROS安装包、仿真器二进制或全部外部依赖 |
+| 先准备 | 新环境先看[首次环境准备](review/环境准备与完整操作.md) | 本仓库不包含ROS安装包、仿真器二进制或全部外部依赖 |
 | 终端1 | cd ~/vnav-builds/lab3 && ./lab3.x86_64 | 打开Unity仿真器后保持运行 |
 | 终端2 | source /opt/ros/noetic/setup.bash && source ~/vnav_ws/devel/setup.bash && roslaunch tesse_ros_bridge tesse_quadrotor_bridge.launch | 桥接就是在仿真器和ROS之间传消息的翻译员 |
 | 终端3 | source /opt/ros/noetic/setup.bash && source ~/vnav_ws/devel/setup.bash && roscd controller_pkg && rviz -d rviz/lab3.rviz | 观察实际与期望状态 |
