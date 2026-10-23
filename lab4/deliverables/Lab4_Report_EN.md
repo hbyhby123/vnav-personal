@@ -6,19 +6,19 @@ Recorded experiment: 22 October 2026; Report revision: 23 October 2026
 
 ## Summary
 
-This experiment connected the Lab3 UAV controller to the Lab4 trajectory generator and tested first-gate hovering followed by one complete course run. Starting from the current vehicle state, the program planned position and yaw trajectories through 12 gate targets and published the reference state at 50Hz. The system ran on Ubuntu 20.04.6 with ROS Noetic and the TESSE Unity simulator. After time alignment of the recorded messages, the three-dimensional position root mean square error during trajectory execution was 0.056426m, with a maximum of 0.084428m. Horizontal tracking was more accurate than vertical tracking. The vehicle was, on average, 0.054671m below the reference, making vertical offset the main error feature. The recorded run supports the operation of the combined planning and control pipeline. The cause of the height offset and the effect of more aggressive timing remain untested.
+I connected the Lab3 controller to the Lab4 trajectory generator, tested hovering at the first gate, and recorded one complete course run. The planner started at the measured state, passed through 12 gate targets, and sent position, velocity, acceleration, and yaw references at 50Hz. Time-aligned bag data gave an execution-only position RMSE of 5.64cm and a maximum error of 8.44cm. Height was the main source of position error: the vehicle averaged 5.47cm below its reference. This run confirms that the programs work together. It does not establish the cause of the height offset or the benefit of faster timing.
 
 ## 1 Introduction
 
-The task was to move beyond holding a single position and make the UAV follow a sequence of gates. A hovering target is fixed. A racing reference must specify where the vehicle should be, how fast it should move, and where it should point at each instant. Abruptly switching between gate positions would make the reference harder for the controller to follow.
+Lab3 follows a reference. Lab4 decides what that reference should be over time. Hovering needs one fixed target; flying through gates needs a timed route. Passing the next gate position directly to the controller would not specify how to move between gates.
 
-Lab4 provides the time-dependent route, while the Lab3 controller follows it. The planner connects discrete gate targets with smooth trajectories. The controller compares the reference with the measured state and adjusts rotor commands. This repeated correction using feedback is closed-loop control. The experiment first checked the basic system at the first gate, then ran the complete trajectory and examined the saved video and messages. [1,2]
+I first checked the coordinate and control chain at the first gate, then ran the full trajectory. The planner supplies position and heading. The controller uses the measured state to correct deviations and adjust rotor speeds. This repeated correction is closed-loop control. [1,2]
 
-The objectives were to implement Part0 and Parts1.1-1.3, relate the implementation to single- and multi-segment trajectory optimization, and retain evidence that could be checked later. Reliable completion was the priority. No repeated timing sweep was performed, so no fastest-run claim is made.
+The work covered Part0 and Parts1.1-1.3, two individual theory exercises, and the video, screenshots, and message records needed to inspect the result. Reliable completion was the goal. No repeated search for the fastest settings was carried out.
 
 ## 2 Experimental Set-up
 
-The environment, program interfaces, and parameters below describe the configuration used for the recorded run.
+Table 1 lists the configuration used for this recording. The reported statistics all come from that run, rather than a mixture of parameter settings.
 
 Table 1. Environment and operating parameters
 
@@ -82,15 +82,47 @@ The two state streams contain different message counts, so subtracting entries b
 
 Position error is actual position minus desired position. The three-dimensional root mean square error, or RMSE, is sqrt(mean(ex²+ey²+ez²)). It summarizes the errors while giving greater weight to larger deviations. The signed mean on each axis was also calculated to distinguish persistent offset from fluctuations around zero. [4]
 
+### 2.4 Reasons for the design choices
+
+Starting from the measured state avoids attaching the vehicle to a route based on an arbitrary default position. The fixed-target test checks the basic chain before a time-varying reference is introduced. Table 4 summarizes the main choices.
+
+Table 4. Design choices and their limits
+
+| **Choice** | **Reason** | **Limit in this experiment** |
+| --- | --- | --- |
+| Measured position and yaw at the start | Match the route to the current state | Valid state messages are still required |
+| Separate position and yaw, shared timing | Coordinate position and heading at each gate | Roll and pitch are not independently prescribed |
+| Time multiplier of 2.0 | Allow more execution time for tracking | No measured comparison with other multipliers |
+| Generate once after valid gate input | Repeated messages do not restart the route | A new run requires restarting the follower |
+| Clamp time at the endpoint | Avoid out-of-range sampling and hold the final target | Completing the route does not stop the controller |
+
+For the same geometric curve, stretching time by a factor of two halves velocity and quarters acceleration. This explains why timing affects tracking demands. It is a scaling relationship, not a measured improvement from a second run: that comparison was not performed.
+
+### 2.5 Checking the message chain
+
+An open simulator window alone does not show that the programs are connected. Actual state provides feedback, desired state provides the reference, and rotor commands provide the control action.
+
+Table 5. Recorded topics and their roles
+
+| **Topic** | **Messages** | **Role** |
+| --- | --- | --- |
+| /current_state | 8365 | Actual position, orientation, and velocity |
+| /desired_state | 7836 | Reference state for the current instant |
+| /desired_traj_vertices | 785 | Ordered gate targets |
+| /rotor_speed_cmds | 15352 | Controller output to the rotor interface |
+| /clock | 8196 | Simulation time for timed execution |
+
+Different counts do not directly prove packet loss. Topics can have different update rates and active intervals. For error analysis, the important checks are overlapping coverage and a common time base, rather than equal array lengths.
+
 ## 3 Results
 
-This section reports measurements and computed values. Their interpretation and limitations are discussed in Section 4.
+The measurements below separate the hovering snapshot from statistics over the complete execution interval.
 
 ### 3.1 First-gate hovering
 
-Table 4 contains one hovering snapshot. Horizontal positions were nearly identical, while the vehicle was approximately 3.96cm below the target. This single reading is not the average over the racing trajectory.
+Table 6 contains one hovering snapshot. Horizontal positions were nearly identical, while the vehicle was approximately 3.96cm below the target. This single reading is not the average over the racing trajectory.
 
-Table 4. One first-gate position snapshot, in metres
+Table 6. One first-gate position snapshot, in metres
 
 | **Axis** | **Desired** | **Actual** | **Actual minus desired** |
 | --- | --- | --- | --- |
@@ -102,7 +134,7 @@ Table 4. One first-gate position snapshot, in metres
 
 The saved continuous video records one complete course run. Figure 2 shows the scene after the final gate. There were 12 gate targets, excluding the current position added as the start vertex.
 
-Table 5. Results during trajectory execution
+Table 7. Results during trajectory execution
 
 | **Metric** | **Value** |
 | --- | --- |
@@ -130,7 +162,7 @@ Table 5. Results during trajectory execution
 
 The recording windows and the planned execution interval are different. Their durations should not be treated as interchangeable.
 
-Table 6. Recording and reference durations
+Table 8. Recording and reference durations
 
 | **Item** | **Duration** | **Meaning** |
 | --- | --- | --- |
@@ -141,7 +173,7 @@ Table 6. Recording and reference durations
 
 ## 4 Discussion
 
-The run demonstrates a working planning and control pipeline. Tracking quality, error causes, and race performance nevertheless require separate interpretation.
+Completing the route, tracking it accurately, and racing quickly are different outcomes. The recording supports the first two for this run; the remaining questions need separate tests.
 
 ### 4.1 Tracking quality and vertical offset
 
@@ -151,11 +183,11 @@ The 95th-percentile error was approximately 6.81cm and the maximum was 8.44cm. T
 
 ### 4.2 Connection to the theory exercises
 
-The single-segment exercise minimizes the integral of squared velocity from zero to one. With only P(0)=0 and P(1)=1, the optimum is P(t)=t and J=1. Allowing quadratic or cubic terms does not reduce the cost. Adding P'(1)=-2 changes the feasible trajectories: the quadratic optimum is 4t-3t² with J=4, while the cubic optimum is t/4+9t²/2-15t³/4 with J=17/8. Additional polynomial freedom is useful only when it can satisfy constraints and improve the objective.
+The single-segment exercise fixes time and displacement, then minimizes the integral of squared velocity. Squaring gives speed peaks a larger cost, so constant velocity is optimal under the original position constraints. This chosen objective is not a model of battery use. With only P(0)=0 and P(1)=1, the optimum is P(t)=t and J=1. Allowing quadratic or cubic terms does not reduce the cost. Adding P'(1)=-2 changes the feasible trajectories: the quadratic optimum is 4t-3t² with J=4, while the cubic optimum is t/4+9t²/2-15t³/4 with J=17/8. Additional polynomial freedom is useful only when it can satisfy constraints and improve the objective.
 
 For one-dimensional minimum snap with fixed segment times, prescribed waypoint positions, and fixed low-order endpoint derivatives, each segment can be represented by a degree-seven polynomial. For k segments there are 8k coefficients: 2k position equations, six endpoint derivative equations, 3(k-1) low-order continuity equations, and 3(k-1) natural optimality conditions. Natural conditions arise from optimization; they should not all be counted as independently imposed constraints. For three segments, 24 coefficients correspond to 18 explicit constraints and six natural conditions.
 
-The implementation uses N=10, meaning ten coefficients and at most degree nine. Its boundary settings and implementation choices differ from the degree-seven theoretical setting. N should therefore not simply be changed to seven. Complete derivations and checks are retained in the two separate theory PDFs.
+The implementation uses N=10, meaning ten coefficients and at most degree nine. Its boundary settings and implementation choices differ from the degree-seven theoretical setting. N should therefore not simply be changed to seven. The English files deliverable_1.pdf and deliverable_2.pdf contain the full models, solutions, and checks.
 
 ### 4.3 Measurement and experimental limitations
 
@@ -171,11 +203,39 @@ A missing gflags_catkin dependency was resolved by adding its source. A stale ca
 
 Further work should first hold the route and time multiplier fixed, change one controller or model parameter at a time, and compare signed height error, maximum error, and completion. After reliable tracking is established, segment times could be shortened gradually and assessed over repeated runs. These are proposed experiments, not completed results.
 
+### 4.5 Separating vertical offset from variation
+
+The three-dimensional RMSE alone does not identify the dominant axis. Per-axis statistics allow a horizontal combined error to be calculated. The vertical mean square can then be separated into squared mean offset and mean-centred variation.
+
+Table 9. Additional diagnostics derived from the same statistics
+
+| **Diagnostic** | **Value** | **Calculation and meaning** |
+| --- | --- | --- |
+| Combined horizontal RMSE | 0.96cm | sqrt(RMSE_X²+RMSE_Y²) |
+| Vertical share of 3D mean squared error | 97.10% | RMSE_Z² / RMSE_3D²; height dominates the position error |
+| Squared mean offset as a share of vertical mean square | 96.68% | mean(eZ)² / mean(eZ²); persistent offset dominates |
+| Mean-centred vertical RMS variation | 1.01cm | sqrt(mean(eZ²)-mean(eZ)²) |
+
+These are further calculations on the same run, not new measurements. Mean squared errors add across axes; RMSE values themselves do not. A large offset share also does not justify simply raising the target by the measured offset as a general fix. That might mask the symptom without testing its cause.
+
+### 4.6 A controlled follow-up plan
+
+Investigating the error and seeking a faster run should be separate tasks. First repeat the baseline, then change one factor at a time. Otherwise, an improvement cannot be linked to a particular change.
+
+Table 10. Proposed checks; not yet performed
+
+| **Order** | **Change or check** | **Compare** |
+| --- | --- | --- |
+| 1 Repeat the baseline | Keep route, gains, and time multiplier fixed | Completion, signed height error, maximum position error |
+| 2 Investigate height | Check coordinates, gravity compensation, and model conventions separately | Whether the height offset changes consistently |
+| 3 Adjust one controller gain | Hold other parameters fixed | Offset, variation, and completion together |
+| 4 Shorten segment times gradually | Reduce the multiplier only after reliable tracking | Success rate over repeated runs and separately measured completion time |
+
 ## 5 Conclusions
 
-The experiment completed first-gate hovering, current-state initialization, position and yaw trajectory generation, and time-based reference publication. One recorded run completed the course. During execution, the three-dimensional position RMSE was approximately 5.64cm and the maximum error was 8.44cm. Persistent downward height offset was the main error feature, and its cause remains unverified.
+The four parts now form a complete sequence: hold a fixed target, read the actual start, plan position and yaw, and publish the reference by elapsed time. One saved run completed the course. Execution-only position RMSE was 5.64cm, with a maximum error of 8.44cm. Horizontal errors were small; a persistent downward offset dominated the position error. Its cause has not been isolated.
 
-Smooth references, a consistent startup sequence, and continuous feedback supported this simulation run. The next priorities are to investigate the height offset and then conduct repeatable timing comparisons. Code, screenshots, video, the bag file, and analysis scripts have been archived. The course-required public Drive/Dropbox media links remain [to be completed].
+The next step is to keep the route and time scale fixed while investigating height error. Faster settings should then be compared over repeated runs. Code, original video, the bag, and screenshots are archived. Both individual theory deliverables are in English. The required public Drive/Dropbox media links remain [to be completed].
 
 ## References
 
@@ -370,9 +430,13 @@ Figures 1 and 2 use original screenshots 04 and 07. The six remaining screenshot
 
 ![Figure 9. Simulator and gate-data paths; Section 2 (original screenshot 03)](../data/raw/screenshots/03_Lab4模拟器路径_可执行文件与赛门数据目录确认.png)
 
-![Figure 10. Hovering reference, actual position, and gains; Tables 4 and 1 (original screenshot 05)](../data/raw/screenshots/05_首门悬停验证_期望位置与实际位置及四个控制器增益.png)
+![Figure 10. Hovering reference, actual position, and gains; Tables 6 and 1 (original screenshot 05)](../data/raw/screenshots/05_首门悬停验证_期望位置与实际位置及四个控制器增益.png)
 
 ![Figure 11. Scene during the race; Section 3.2 (original screenshot 06)](../data/raw/screenshots/06_Lab4竞速过程_无人机穿越中间赛门画面.png)
 
 ![Figure 12. Recorded bag information and topic counts; Section 2.3 (original screenshot 08)](../data/raw/screenshots/08_完整通关rosbag检查_记录时长与状态话题消息数量.png)
 
+
+## Appendix C. Three-dimensional trajectory
+
+![Figure 13. Three-dimensional paths and gate centres; useful for viewing height changes, not an independent gate-passage test](../data/analysis/trajectory_3d.png)

@@ -8,7 +8,7 @@
 
 | **任务名称** | **要解决的问题** | **采用的方法 / 技术** | **预期结果** |
 | --- | --- | --- | --- |
-| 说明方法和真实结果 | 集中放置可交的PDF和可编辑原稿。报告按用户提供模板组织为摘要、引言、实验设置、结果、讨论、结论和参考文献，附四个Part的核心代码及详细注释。 | 16页中文报告、18页英文报告、两份2页理论PDF及3页验收提纲 | 报告与推导可以复查和修改 |
+| 说明方法和真实结果 | 集中放置可交的PDF和可编辑原稿。报告按用户提供模板组织为摘要、引言、实验设置、结果、讨论、结论和参考文献，附四个Part的核心代码及详细注释。 | 19页中文报告、20页英文报告、两份2页英文理论PDF及3页验收提纲 | 报告与推导可以复查和修改 |
 
 ## 交付文件
 
@@ -17,15 +17,17 @@
 | [assets](assets) | 进入下层README查看任务与逐文件清单 |
 | [Lab4_助教验收讲解提纲_黄博宇.pdf](Lab4_助教验收讲解提纲_黄博宇.pdf) | 3页口头讲解：开场、演示顺序、实测数字、常见追问 |
 | [build_acceptance_guide.py](build_acceptance_guide.py) | 重建验收讲解PDF；需要ReportLab与Windows微软雅黑字体 |
-| [Lab4_实验报告_黄博宇.pdf](Lab4_实验报告_黄博宇.pdf) | 16页中文报告：12幅图、7张表、4个Part的代码注释 |
+| [Lab4_实验报告_黄博宇.pdf](Lab4_实验报告_黄博宇.pdf) | 19页中文报告：13幅图、11张表、4个Part的代码注释 |
 | [render_readable_report.py](render_readable_report.py) | 旧入口兼容包装，调用当前模板排版脚本 |
-| [build_reports.py](build_reports.py) | 重建中英文报告、两份理论PDF与公式图的排版源码 |
-| [deliverable_1.pdf](deliverable_1.pdf) | 2页单段轨迹理论解答 |
-| [deliverable_2.pdf](deliverable_2.pdf) | 2页多段约束计数理论解答 |
-| [Lab4_Report_EN_Boyu_Huang.pdf](Lab4_Report_EN_Boyu_Huang.pdf) | 18页英文报告，正文与中文版本对应 |
+| [build_reports.py](build_reports.py) | 重建中英文报告、两份理论PDF的排版源码 |
+| [deliverable_1.pdf](deliverable_1.pdf) | 2页英文单段轨迹理论解答 |
+| [deliverable_2.pdf](deliverable_2.pdf) | 2页英文多段约束计数理论解答 |
+| [Lab4_Report_EN_Boyu_Huang.pdf](Lab4_Report_EN_Boyu_Huang.pdf) | 20页英文报告，正文与中文版本对应 |
 | [Lab4_Report_EN.md](Lab4_Report_EN.md) | 可编辑英文原稿，含英文代码注释 |
 | [render_template_reports.py](render_template_reports.py) | 按所给模板生成中英文PDF，支持表格、图注与代码块；需要ReportLab、Pillow和Windows字体 |
 | [实验报告.md](实验报告.md) | 可编辑实验报告原稿 |
+| [Deliverable_1_EN.md](Deliverable_1_EN.md) | Deliverable 1英文原稿，含各小问与结果检查 |
+| [Deliverable_2_EN.md](Deliverable_2_EN.md) | Deliverable 2英文原稿，区分显式约束和自然条件 |
 | [理论推导.md](理论推导.md) | 可编辑的完整理论推导 |
 | [README.md](README.md) | 本层任务、文件、函数、输入输出、参数和通俗说明 |
 
@@ -33,7 +35,7 @@
 
 | **函数名 / 文件入口** | **作用** | **通俗说明** |
 | --- | --- | --- |
-| build_reports.py | 重建4个报告/理论PDF | 读取真实metrics与截图 |
+| build_reports.py | 重建4个报告/理论PDF | 读取Markdown原稿与截图 |
 | deliverable_1.pdf | 单段轨迹的全部小问 | 原端点与额外终点速度约束 |
 | deliverable_2.pdf | 多段约束计数与推广 | 说明自然条件和显式约束区别 |
 
@@ -42,7 +44,7 @@
 | **方向** | **内容** | **格式 / 示例** |
 | --- | --- | --- |
 | 输入 | metrics.json、原始截图、数学推导 | 不虚构成绩 |
-| 输出 | 5份PDF、3份Markdown、公式素材 | 16+18+2+2+3页 |
+| 输出 | 5份PDF、5份Markdown与历史公式素材 | 19+20+2+2+3页 |
 
 ## 参数说明
 

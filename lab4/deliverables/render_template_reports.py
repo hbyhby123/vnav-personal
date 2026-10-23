@@ -18,11 +18,12 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
     regular = Path('C:/Windows/Fonts/times.ttf' if english else 'C:/Windows/Fonts/simsun.ttc')
     bold = Path('C:/Windows/Fonts/timesbd.ttf' if english else 'C:/Windows/Fonts/msyhbd.ttc')
     if regular.exists() and bold.exists():
-        pdfmetrics.registerFont(TTFont('ReadableCJK', str(regular), subfontIndex=0))
-        pdfmetrics.registerFont(TTFont('ReadableCJK-Bold', str(bold), subfontIndex=0))
-        pdfmetrics.registerFontFamily('ReadableCJK', normal='ReadableCJK', bold='ReadableCJK-Bold',
-                                     italic='ReadableCJK', boldItalic='ReadableCJK-Bold')
-        normal, strong = 'ReadableCJK', 'ReadableCJK-Bold'
+        normal = 'Lab4EN' if english else 'Lab4CN'
+        strong = normal + '-Bold'
+        pdfmetrics.registerFont(TTFont(normal, str(regular), subfontIndex=0))
+        pdfmetrics.registerFont(TTFont(strong, str(bold), subfontIndex=0))
+        pdfmetrics.registerFontFamily(normal, normal=normal, bold=strong,
+                                     italic=normal, boldItalic=strong)
     else:
         pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
         pdfmetrics.registerFontFamily('STSong-Light', normal='STSong-Light', bold='STSong-Light',
@@ -43,6 +44,13 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
                                fontSize=8.2, leading=11.5, spaceAfter=0,
                                backColor=colors.HexColor('#f5f5f5'), leftIndent=6, rightIndent=6),
     }
+    if source_name.startswith('Deliverable_'):
+        styles['title'].fontSize, styles['title'].leading = 19, 24
+        styles['title'].spaceAfter = 12
+        styles['h1'].fontSize, styles['h1'].leading = 12.5, 17
+        styles['h1'].spaceBefore, styles['h1'].spaceAfter = 10, 6
+        styles['body'].fontSize, styles['body'].leading = 10, 13
+        styles['body'].spaceAfter = 5
 
     def inline(text):
         text = html.escape(text).replace('−', '-').replace('ᵀ', '^T')
@@ -91,6 +99,10 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
         if not line:
             i += 1
             continue
+        if line == '---PAGE---':
+            story.append(PageBreak())
+            i += 1
+            continue
         if line.startswith('```'):
             i += 1
             code_paragraphs = []
@@ -122,6 +134,8 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
         elif line.startswith('## '):
             if line.startswith('## 附录') or line.startswith('## Appendix'):
                 story.append(PageBreak())
+            elif line.startswith('## 5 ') and not source_name.startswith('Deliverable_'):
+                story.append(CondPageBreak(190))
             story.append(paragraph(line[3:], 'h1'))
         elif line.startswith('### '):
             if line.startswith('### A.3') or line == '### A.4 Part1.3':
@@ -138,7 +152,7 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
             scale = min(WIDTH/width, max_height/height)
             story.append(KeepTogether([Image(str(path), width=width*scale, height=height*scale, hAlign='CENTER'),
                           paragraph(match[1], 'caption')]))
-        elif line.startswith('表') or re.match(r'Table [A-Z0-9]', line):
+        elif re.match(r'表[A-Z]?\d+\s', line) or re.match(r'Table [A-Z]?\d+\.', line):
             story.append(Paragraph(inline(line), ParagraphStyle('table_caption', parent=styles['caption'], keepWithNext=True)))
         elif line.startswith('- '):
             story.append(paragraph('• '+line[2:]))
