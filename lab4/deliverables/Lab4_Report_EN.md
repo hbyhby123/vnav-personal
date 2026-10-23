@@ -1,6 +1,6 @@
 # VNAV Lab4: UAV Control and Racing
 
-Boyu Huang, 24020036026; Class: International Computer Science, Class 1; Group 8; Tutor: [to be completed]
+Boyu Huang, 24020036026; Class: International Computer Science, Class 1; Group 8
 
 Recorded experiment: 22 October 2026; Report revision: 23 October 2026
 

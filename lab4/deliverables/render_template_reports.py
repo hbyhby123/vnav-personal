@@ -16,7 +16,7 @@ WIDTH = 499
 
 def build_template_report(source_name='实验报告.md', target_name='Lab4_实验报告_黄博宇.pdf', english=False):
     regular = Path('C:/Windows/Fonts/times.ttf' if english else 'C:/Windows/Fonts/simsun.ttc')
-    bold = Path('C:/Windows/Fonts/timesbd.ttf' if english else 'C:/Windows/Fonts/simsun.ttc')
+    bold = Path('C:/Windows/Fonts/timesbd.ttf' if english else 'C:/Windows/Fonts/msyhbd.ttc')
     if regular.exists() and bold.exists():
         pdfmetrics.registerFont(TTFont('ReadableCJK', str(regular), subfontIndex=0))
         pdfmetrics.registerFont(TTFont('ReadableCJK-Bold', str(bold), subfontIndex=0))
@@ -29,11 +29,11 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
                                      italic='STSong-Light', boldItalic='STSong-Light')
         normal = strong = 'STSong-Light'
     styles = {
-        'title': ParagraphStyle('readable_title', fontName=strong, fontSize=20, leading=25, spaceAfter=16, alignment=1),
+        'title': ParagraphStyle('readable_title', fontName=strong, fontSize=22, leading=29, spaceAfter=18, alignment=1, textColor=colors.HexColor('#19354a')),
         'h1': ParagraphStyle('readable_h1', fontName=strong, fontSize=15, leading=21,
-                            spaceBefore=13, spaceAfter=7, keepWithNext=True),
+                            spaceBefore=16, spaceAfter=9, keepWithNext=True, textColor=colors.HexColor('#19354a')),
         'h2': ParagraphStyle('readable_h2', fontName=strong, fontSize=11.4, leading=18,
-                            spaceBefore=9, spaceAfter=6, keepWithNext=True),
+                            spaceBefore=11, spaceAfter=7, keepWithNext=True, textColor=colors.HexColor('#27475b')),
         'body': ParagraphStyle('readable_body', fontName=normal, fontSize=11, leading=14.8,
                               spaceAfter=7, allowWidows=0, allowOrphans=0),
         'cell': ParagraphStyle('readable_cell', fontName=normal, fontSize=9.5, leading=13),
@@ -60,18 +60,19 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
         rows = [row for row in rows if not all(re.fullmatch(r'[:\- ]+', c) for c in row)]
         cols = len(rows[0])
         if cols == 2:
-            widths = [130, WIDTH-130]
+            widths = [225, WIDTH-225]
         elif cols == 3:
-            widths = [130, 145, WIDTH-275]
+            widths = [110, 180, WIDTH-290]
         elif cols == 4:
             widths = [90, 145, 135, WIDTH-370]
         else:
             widths = [WIDTH/cols]*cols
-        cells = [[paragraph(c, 'cell') for c in row] for row in rows]
+        cells = [[paragraph('**'+c.replace('**','')+'**' if j == 0 else c, 'cell') for c in row] for j,row in enumerate(rows)]
         tab = Table(cells, colWidths=widths, repeatRows=1, hAlign='LEFT', rowSplitRange=(3, -2))
         tab.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#eeeeee')),
-            ('GRID', (0, 0), (-1, -1), .45, colors.HexColor('#888888')),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#e6eef3')),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white,colors.HexColor('#f6f8fa')]),
+            ('GRID', (0, 0), (-1, -1), .35, colors.HexColor('#cbd5df')),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
             ('LEFTPADDING', (0, 0), (-1, -1), 7), ('RIGHTPADDING', (0, 0), (-1, -1), 7),
             ('TOPPADDING', (0, 0), (-1, -1), 5), ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
@@ -95,6 +96,8 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
             while i < len(lines) and not lines[i].strip().startswith('```'):
                 raw = lines[i].rstrip()
                 escaped = html.escape(raw).replace(' ', '&#160;')
+                if raw.lstrip().startswith('//'):
+                    escaped = '<font color="#356956">'+escaped+'</font>'
                 story.append(Paragraph(escaped or '&#160;', styles['code']))
                 i += 1
             story.append(Spacer(1, 10))
@@ -130,12 +133,18 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
             story.append(Paragraph(inline(line), ParagraphStyle('table_caption', parent=styles['caption'], keepWithNext=True)))
         elif line.startswith('- '):
             story.append(paragraph('• '+line[2:]))
+        elif line.startswith(('黄博宇 24020036026','Boyu Huang, 24020036026','实验记录：','Recorded experiment:')):
+            story.append(paragraph(line, 'caption'))
         else:
             story.append(paragraph(line))
         i += 1
 
     def decoration(c, doc):
         c.setFont(normal, 8)
+        c.setFillColor(colors.HexColor('#617585'))
+        c.setStrokeColor(colors.HexColor('#cbd5df'))
+        c.setLineWidth(.5)
+        c.line(48, 805, 547, 805)
         c.drawString(48, 814, 'VNAV LAB4 | Boyu Huang 24020036026' if english else 'VNAV LAB4  无人机控制与竞速  |  黄博宇 24020036026')
         c.drawCentredString(297.6, 27, str(doc.page))
 
