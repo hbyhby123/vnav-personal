@@ -261,7 +261,7 @@ The next step is to keep the route and time scale fixed while investigating heig
 
 [4] Experiment recording run_20261022_000059; repository files data/analysis/metrics.json and analyze_run.py; theory derivations in deliverable_1.pdf and deliverable_2.pdf.
 
-Execution, screenshots, and video came from the author's Ubuntu environment.
+
 
 ## Appendix A. Required core code with annotations
 
