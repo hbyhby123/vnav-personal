@@ -93,13 +93,21 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
             continue
         if line.startswith('```'):
             i += 1
+            code_paragraphs = []
             while i < len(lines) and not lines[i].strip().startswith('```'):
                 raw = lines[i].rstrip()
                 escaped = html.escape(raw).replace(' ', '&#160;')
                 if raw.lstrip().startswith('//'):
                     escaped = '<font color="#356956">'+escaped+'</font>'
-                story.append(Paragraph(escaped or '&#160;', styles['code']))
+                code_paragraphs.append(Paragraph(escaped or '&#160;', styles['code']))
                 i += 1
+            if len(code_paragraphs) <= 12:
+                if story and isinstance(story[-1], Paragraph) and story[-1].style is styles['h2']:
+                    heading = story.pop()
+                    code_paragraphs.insert(0, heading)
+                story.append(KeepTogether(code_paragraphs))
+            else:
+                story.extend(code_paragraphs)
             story.append(Spacer(1, 10))
             i += 1
             continue
@@ -117,7 +125,7 @@ def build_template_report(source_name='实验报告.md', target_name='Lab4_实�
             story.append(paragraph(line[3:], 'h1'))
         elif line.startswith('### '):
             if line.startswith('### A.3') or line == '### A.4 Part1.3':
-                story.append(CondPageBreak(650))
+                story.append(CondPageBreak(550 if line == '### A.3 Part1.2' else 650))
             story.append(paragraph(line[4:], 'h2'))
         elif line.startswith('!['):
             match = re.fullmatch(r'!\[([^\]]*)\]\(([^)]+)\)', line)
