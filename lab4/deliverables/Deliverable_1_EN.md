@@ -37,7 +37,7 @@ Q = [[1,1,1],[1,4/3,3/2],[1,3/2,9/5]]
 A = [1,1,1], b = 1
 ```
 
-For L=p^T Qp+lambda^T(Ap-b), stationarity and feasibility give the Karush-Kuhn-Tucker equations:
+For L=p^T Qp+lambda^T(Ap-b), setting the derivatives to zero and keeping the constraints gives the Karush-Kuhn-Tucker (KKT) equations:
 
 ```text
 [2Q  A^T] [p     ] = [0]

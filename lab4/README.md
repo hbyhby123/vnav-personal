@@ -37,7 +37,7 @@
 | --- | --- | --- |
 | [code/](code/README.md) | 三个完整实际运行ROS包与官方模板对照 | 每层README列出文件、函数、接口和参数 |
 | [data/](data/README.md) | 原始证据与可复算分析 | raw保原件，analysis存派生结果 |
-| [deliverables/](deliverables/README.md) | 正式报告、个人题与可编辑原稿 | 5份PDF及重建源码 |
+| [deliverables/](deliverables/README.md) | 正式报告、个人题与可编辑原稿 | 7份PDF及重建源码 |
 | [review/](review/README.md) | 操作、复习和脚本 | 只保留两份主说明，避免多份过时教程 |
 | [rviz_drone_race.txt](rviz_drone_race.txt) | 真实GitHub媒体入口和正式平台链接状态 | Drive/Dropbox尚待补；不伪造公开链接 |
 | [README.md](README.md) | 本层总览 | 任务、交付、运行、结果和原理 |
@@ -49,6 +49,8 @@
 | [助教验收讲解PDF](deliverables/Lab4_助教验收讲解提纲_黄博宇.pdf) | 3页，开场介绍、演示顺序、实测结果、常见问答 | 可直接照着讲解 |
 | [English report](deliverables/Lab4_Report_EN_Boyu_Huang.pdf) | 20页英文版，与中文版数据和结论一致 | 按所给模板组织，含代码注释 |
 | [实验报告PDF](deliverables/Lab4_实验报告_黄博宇.pdf) | 19页中文版，含核心代码注释、13幅图与11张表 | 已生成并检查全部页面 |
+| [D1中文理论PDF](deliverables/deliverable_1_CN.pdf) | 2页，单段轨迹优化中文解释 | 与英文版结果一致 |
+| [D2中文理论PDF](deliverables/deliverable_2_CN.pdf) | 2页，多段轨迹连接与计数 | 与英文版条件一致 |
 | [D1理论PDF](deliverables/deliverable_1.pdf) | 英文2页，单段轨迹全部小问 | 已精确核验 |
 | [D2理论PDF](deliverables/deliverable_2.pdf) | 英文2页，约束计数与r阶推广 | 假设与自然条件明确 |
 | [完整运行视频预览](data/raw/run_20261022_000059/race_preview.mp4) | 160.75秒，约10.8MB | 连续缩放重编码，不剪辑、不加速 |

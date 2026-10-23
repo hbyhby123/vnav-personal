@@ -4,7 +4,7 @@ Boyu Huang, 24020036026; Group 8
 
 ## 1 Assumptions
 
-Consider one-dimensional motion through k+1 prescribed positions, joined by k polynomial segments. Durations are fixed. At the initial and final points, derivatives 1 through r-1 are prescribed. At internal points, these derivatives are free to be chosen, but the values on both sides must agree. A free derivative is an unknown, not a derivative forced to zero.
+Consider one-dimensional motion through k+1 specified positions, joined by k polynomial segments. Durations are fixed. At the initial and final points, derivatives 1 through r-1 are specified. At internal points, these derivatives are free to be chosen, but the values on both sides must agree. A free derivative is an unknown, not a derivative forced to zero.
 
 The objective is J=sum over segments of integral [P_j^(r)(t)]² dt. Minimum snap uses r=4: snap is the fourth derivative of position.
 
@@ -33,9 +33,9 @@ sum over l=0,...,r-1 of
   (-1)^l * P^(r+l) * delta P^(r-1-l)
 ```
 
-At an internal waypoint, delta P=0 because position is prescribed. Variations of derivatives 1 through r-1 are free and shared by adjacent segments. Matching their boundary coefficients requires derivatives r through 2r-2 to be continuous. This supplies r-1 natural conditions per join.
+At an internal waypoint, delta P=0 because position is specified. Variations of derivatives 1 through r-1 are free and shared by adjacent segments. Matching their boundary coefficients requires derivatives r through 2r-2 to be continuous. This supplies r-1 natural conditions per join.
 
-The derivative of order 2r-1 multiplies delta P=0 and may jump. For minimum snap, velocity, acceleration, and jerk are explicitly continuous. Derivatives four, five, and six become continuous at the optimum; the seventh need not be.
+The derivative of order 2r-1 multiplies delta P=0 and may jump. For minimum snap, velocity, acceleration, and jerk (the rate of change of acceleration) are explicitly continuous. Derivatives four, five, and six become continuous at the optimum; the seventh need not be.
 
 ---PAGE---
 

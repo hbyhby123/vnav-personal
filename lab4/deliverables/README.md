@@ -8,7 +8,7 @@
 
 | **任务名称** | **要解决的问题** | **采用的方法 / 技术** | **预期结果** |
 | --- | --- | --- | --- |
-| 说明方法和真实结果 | 集中放置可交的PDF和可编辑原稿。报告按用户提供模板组织为摘要、引言、实验设置、结果、讨论、结论和参考文献，附四个Part的核心代码及详细注释。 | 19页中文报告、20页英文报告、两份2页英文理论PDF及3页验收提纲 | 报告与推导可以复查和修改 |
+| 说明方法和真实结果 | 集中放置可交的PDF和可编辑原稿。报告按用户提供模板组织为摘要、引言、实验设置、结果、讨论、结论和参考文献，附四个Part的核心代码及详细注释。 | 19页中文报告、20页英文报告、两题各中英文、共四份2页理论PDF及3页验收提纲 | 报告与推导可以复查和修改 |
 
 ## 交付文件
 
@@ -19,7 +19,7 @@
 | [build_acceptance_guide.py](build_acceptance_guide.py) | 重建验收讲解PDF；需要ReportLab与Windows微软雅黑字体 |
 | [Lab4_实验报告_黄博宇.pdf](Lab4_实验报告_黄博宇.pdf) | 19页中文报告：13幅图、11张表、4个Part的代码注释 |
 | [render_readable_report.py](render_readable_report.py) | 旧入口兼容包装，调用当前模板排版脚本 |
-| [build_reports.py](build_reports.py) | 重建中英文报告、两份理论PDF的排版源码 |
+| [build_reports.py](build_reports.py) | 重建中英文报告、四份中英文理论PDF的排版源码 |
 | [deliverable_1.pdf](deliverable_1.pdf) | 2页英文单段轨迹理论解答 |
 | [deliverable_2.pdf](deliverable_2.pdf) | 2页英文多段约束计数理论解答 |
 | [Lab4_Report_EN_Boyu_Huang.pdf](Lab4_Report_EN_Boyu_Huang.pdf) | 20页英文报告，正文与中文版本对应 |
@@ -28,6 +28,11 @@
 | [实验报告.md](实验报告.md) | 可编辑实验报告原稿 |
 | [Deliverable_1_EN.md](Deliverable_1_EN.md) | Deliverable 1英文原稿，含各小问与结果检查 |
 | [Deliverable_2_EN.md](Deliverable_2_EN.md) | Deliverable 2英文原稿，区分显式约束和自然条件 |
+| [deliverable_1_CN.pdf](deliverable_1_CN.pdf) | 2页中文个人题1，与英文版公式和结论一致 |
+| [deliverable_2_CN.pdf](deliverable_2_CN.pdf) | 2页中文个人题2，解释连续条件与自然条件 |
+| [Deliverable_1_CN.md](Deliverable_1_CN.md) | 中文个人题1可编辑原稿 |
+| [Deliverable_2_CN.md](Deliverable_2_CN.md) | 中文个人题2可编辑原稿 |
+| [build_theory_deliverables.py](build_theory_deliverables.py) | 单独重建四份中英文理论PDF，不改动实验报告 |
 | [理论推导.md](理论推导.md) | 可编辑的完整理论推导 |
 | [README.md](README.md) | 本层任务、文件、函数、输入输出、参数和通俗说明 |
 
@@ -35,7 +40,7 @@
 
 | **函数名 / 文件入口** | **作用** | **通俗说明** |
 | --- | --- | --- |
-| build_reports.py | 重建4个报告/理论PDF | 读取Markdown原稿与截图 |
+| build_reports.py | 重建6个报告/理论PDF | 读取Markdown原稿与截图 |
 | deliverable_1.pdf | 单段轨迹的全部小问 | 原端点与额外终点速度约束 |
 | deliverable_2.pdf | 多段约束计数与推广 | 说明自然条件和显式约束区别 |
 
@@ -44,7 +49,7 @@
 | **方向** | **内容** | **格式 / 示例** |
 | --- | --- | --- |
 | 输入 | metrics.json、原始截图、数学推导 | 不虚构成绩 |
-| 输出 | 5份PDF、5份Markdown与历史公式素材 | 19+20+2+2+3页 |
+| 输出 | 7份PDF、7份Markdown与历史公式素材 | 19+20+2+2+2+2+3页 |
 
 ## 参数说明
 
