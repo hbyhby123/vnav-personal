@@ -1,0 +1,12 @@
+# 文本脚本使用LF，便于在Ubuntu执行。
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+# 报告与原始媒体保留精确字节，不进行换行转换。
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.mp4 binary
+*.bag binary
+*.zip binary

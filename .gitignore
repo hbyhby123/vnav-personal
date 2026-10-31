@@ -1,0 +1,10 @@
+# 新的本机构建目录不进入版本库；已经跟踪的历史材料继续保留。
+**/build/
+**/devel/
+**/install/
+**/__pycache__/
+*.pyc
+.venv/
+.report_packages/
+.DS_Store
+Thumbs.db
