@@ -1,5 +1,13 @@
 # Lab4 无人机控制与竞速
 
+[返回课程首页](../README.md) · [中文报告](deliverables/Lab4_实验报告_黄博宇.pdf) · [English report](deliverables/Lab4_Report_EN_Boyu_Huang.pdf) · [代码入口](code/README.md) · [截图与数据](data/README.md) · [资料总索引](../docs/报告与证据索引.md)
+
+## 阅读顺序
+
+1. 先读报告，了解本实验的问题、结果和限制。
+2. 再看下面的任务与环境说明，选择要复现的部分。
+3. 最后对照源码和原始证据，核对参数与实际运行结果。
+
 ## 项目简介
 
 本实验把赛门位置连接成平滑飞行轨迹，再由Lab3控制器驱动仿真无人机跟随。已归档首门悬停和一次完整通关的真实代码、截图、视频、bag与离线分析，以及报告和两道个人理论题。
@@ -151,4 +159,4 @@ lab4/
 | 原视频 | 分片保存只是解决单文件大小，不损失原始字节；预览是额外派生文件 |
 | 课程要求 | [MIT Lab4题面](https://vnav.mit.edu/labs_2023/lab4/exercises.html) |
 | 代码基线 | [VNAV2021](https://github.com/MIT-SPARK/VNAV-labs/tree/VNAV2021/lab4) |
-| [返回仓库总览](../README.md) | 查看Lab1至Lab4入口 |
+| [返回仓库总览](../README.md) | 查看Lab1至Lab5入口 |

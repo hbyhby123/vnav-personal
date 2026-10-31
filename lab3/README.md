@@ -1,5 +1,13 @@
 # Lab3 无人机轨迹生成与跟踪控制
 
+[返回课程首页](../README.md) · [中文报告](deliverables/Lab3_Report_CN_Huang_Boyu.pdf) · [English report](deliverables/Lab3_Report_EN_Huang_Boyu.pdf) · [代码入口](code/README.md) · [截图与数据](data/README.md) · [资料总索引](../docs/报告与证据索引.md)
+
+## 阅读顺序
+
+1. 先读报告，了解本实验的问题、结果和限制。
+2. 再看下面的任务与环境说明，选择要复现的部分。
+3. 最后对照源码和原始证据，核对参数与实际运行结果。
+
 **最新报告：[20页中文版](deliverables/Lab3_Report_CN_Huang_Boyu.pdf) / [20页英文版](deliverables/Lab3_Report_EN_Huang_Boyu.pdf)，两份均使用全部8张原始截图。**
 
 **最终交付入口：[英文版提交包](submission/README.md)。仅交最新英文报告，D2为英文版；视频公开链接仍待补充。**
@@ -129,4 +137,4 @@ lab3/
 | 实验 / 文档日期 | 2026年10月21日 / 2026年10月22日 |
 | 个人与团队提交 | 按老师指定位置分别提交；本仓库不等于正式提交回执 |
 | 代码边界 | 已实际运行；省略期望角速度前馈，未做阻力补偿对比实验 |
-| [仓库总览](../README.md) | 查看Lab1、Lab2与Lab3入口 |
+| [仓库总览](../README.md) | 查看Lab1至Lab5入口 |

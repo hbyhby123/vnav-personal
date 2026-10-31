@@ -1,5 +1,13 @@
 # Lab5 无人机视觉跟踪
 
+[返回课程首页](../README.md) · [中文报告](deliverables/LAB5_无人机视觉跟踪实验报告.pdf) · [English report](deliverables/LAB5_Visual_Tracking_Report_EN.pdf) · [代码入口](feature_tracking/README.md) · [截图与数据](screenshots/README.md) · [资料总索引](../docs/报告与证据索引.md)
+
+## 阅读顺序
+
+1. 先读报告，了解本实验的问题、结果和限制。
+2. 再看下面的任务与环境说明，选择要复现的部分。
+3. 最后对照源码和原始证据，核对参数与实际运行结果。
+
 本实验解决“怎样在两张图像中找到同一处位置”。先检测容易识别的点，再为局部图像生成描述子，找到候选对应关系，最后用几何模型剔除部分错误匹配。另实现 Harris+LK 稀疏跟踪和 Farneback 稠密光流。
 
 [English guide](README_EN.md) · [中文版报告 PDF](deliverables/LAB5_无人机视觉跟踪实验报告.pdf) · [English report PDF](deliverables/LAB5_Visual_Tracking_Report_EN.pdf) · [编号截图](screenshots/README.md) · [统计图表](charts/README.md)

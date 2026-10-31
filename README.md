@@ -1,77 +1,65 @@
-# VNAV 课程实验总览
+# VNAV 课程实验
 
-本仓库整理 Lab1—Lab5 的报告、代码和实验记录，方便交作业、现场演示和后续复习。总览只介绍各实验的主题与入口，具体任务和操作放在对应 Lab 内。
+黄博宇 · 24020036026 · 中外计科一班 · 第8组
 
-## 任务内容
+这里按 Lab1—Lab5 保存报告、源码和实际运行记录。先在下表找到实验，再打开该实验的 README 查看环境、操作和结果。
 
-| **任务** | **要解决的问题** | **采用的方法 / 技术** | **预期结果** |
-| --- | --- | --- | --- |
-| Lab1 工具与编程基础 | 学会使用开发工具并组织简单程序 | Linux终端、Git版本管理、C++与CMake构建 | 能编译运行程序，完成基础练习 |
-| Lab2 ROS与坐标变换 | 描述多个物体的位置、方向和相对运动 | ROS消息协作、坐标变换与轨迹可视化 | 能发布和观察坐标关系，解释相对轨迹 |
-| Lab3 无人机轨迹控制 | 让无人机根据目标自动调整飞行动作 | 几何控制、旋翼分配与仿真验证 | 实现悬停和圆轨迹跟踪，保留实测证据 |
-| Lab4 无人机控制与竞速 | 把赛门连接成路线并完整通过 | 轨迹优化、yaw连续展开、时间采样与闭环跟踪 | 完整源码、理论、报告、视频、bag与分析 |
-| Lab5 无人机视觉跟踪 | 从图像找到稳定对应点 | SIFT、SURF、ORB、FAST+BRIEF、Harris+LK与光流 | 完整序列统计、中英报告、编号截图与图表 |
+## 实验导航
 
-## 交付文件清单
+| 实验 | 学什么 | 中文报告 | English report | 代码 | 截图与数据 |
+| --- | --- | --- | --- | --- | --- |
+| [Lab1](lab1/README.md) | 开发工具与C++基础 | [中文 PDF](lab1/report/Lab1_实验报告_黄博宇_完整版.pdf) | [English PDF](lab1/report/Lab1_Report_EN.pdf) | [代码](lab1/lab1_demo/) | [证据](lab1/report/figures/) |
+| [Lab2](lab2/README.md) | ROS与坐标变换 | [中文 PDF](lab2/Lab2_Report_CN.pdf) | [English PDF](lab2/Lab2_Report_EN.pdf) | [代码](lab2/two_drones_pkg/) | [证据](lab2/images/) |
+| [Lab3](lab3/README.md) | 无人机轨迹控制 | [中文 PDF](lab3/deliverables/Lab3_Report_CN_Huang_Boyu.pdf) | [English PDF](lab3/deliverables/Lab3_Report_EN_Huang_Boyu.pdf) | [代码](lab3/code/README.md) | [证据](lab3/data/README.md) |
+| [Lab4](lab4/README.md) | 无人机控制与竞速 | [中文 PDF](lab4/deliverables/Lab4_实验报告_黄博宇.pdf) | [English PDF](lab4/deliverables/Lab4_Report_EN_Boyu_Huang.pdf) | [代码](lab4/code/README.md) | [证据](lab4/data/README.md) |
+| [Lab5](lab5/README.md) | 无人机视觉跟踪 | [中文 PDF](lab5/deliverables/LAB5_无人机视觉跟踪实验报告.pdf) | [English PDF](lab5/deliverables/LAB5_Visual_Tracking_Report_EN.pdf) | [代码](lab5/feature_tracking/README.md) | [证据](lab5/screenshots/README.md) |
 
-| **实验入口** | **主要产出** | **报告入口** |
-| --- | --- | --- |
-| [Lab1](lab1/README.md) | 基础练习、C++源码、构建配置、报告与截图 | [实验报告PDF](lab1/report/Lab1_实验报告_黄博宇_完整版.pdf) |
-| [Lab2](lab2/README.md) | 双无人机ROS包、坐标变换推导、报告与截图 | [完整实验报告](lab2/Lab2_实验报告.md) |
-| [Lab3](lab3/README.md) | 控制器、理论题、报告、视频、数据与复习资料 | [实验报告PDF](lab3/deliverables/Lab3_Report_EN_Huang_Boyu.pdf) |
-| [Lab4](lab4/README.md) | 竞速源码、个人理论、报告、原始证据与复算分析 | [实验报告PDF](lab4/deliverables/Lab4_实验报告_黄博宇.pdf) |
-| [Lab5](lab5/README.md) | 视觉跟踪源码、逐帧CSV、17张截图、7张图表 | [中文报告](lab5/deliverables/LAB5_无人机视觉跟踪实验报告.pdf) · [English report](lab5/deliverables/LAB5_Visual_Tracking_Report_EN.pdf) |
+## 按目的查找
 
-## 环境与快速开始
-
-| **步骤** | **命令 / 操作** | **说明** |
-| --- | --- | --- |
-| 1 获取仓库 | `git clone https://github.com/hbyhby123/vnav-personal.git ~/vnav-personal` | 已有目录时不重复克隆，先检查本地修改 |
-| 2 选择实验 | 打开对应 Lab 的 README | 查看该实验任务、文件和环境要求 |
-| 3 配置与运行 | 按该 Lab 的操作说明执行 | 不同实验的系统、依赖和路径以各自记录为准 |
-| 4 查看与复习 | 对照报告、源码和实际记录 | 详细结果与提交待办放在各实验内部 |
-
-| **实验** | **主要工具** | **通俗说明** |
-| --- | --- | --- |
-| Lab1 | Linux、Git、C++、CMake | 操作系统、版本记录、编程语言和构建工具 |
-| Lab2 | ROS Noetic、TF、RViz | ROS让程序交换消息；TF记录坐标关系；RViz显示结果 |
-| Lab3 | ROS Noetic、TESSE、RViz | ROS连接程序；TESSE提供仿真场地；RViz观察飞行 |
-| Lab4 | ROS Noetic、TESSE Lab4、轨迹优化库 | 读取赛门并规划、跟踪完整飞行路线 |
-| Lab5 | ROS Noetic、OpenCV contrib、rosbag | 检测和匹配图像特征，验证稀疏与稠密运动估计 |
+- **看报告或交作业**：先用上表的中英文 PDF 入口，再核对各 Lab 的交付要求。
+- **运行程序**：打开对应 Lab 的 README，使用该实验记录的系统、依赖和参数。
+- **检查实验是否真的跑过**：结合截图、视频、bag、逐帧 CSV 和分析说明，不只看一张结果图。
+- **复习或演示**：[阅读与复现路线](docs/阅读与复现路线.md)列出建议顺序。
+- **维护仓库**：看[目录与文件规范](docs/目录与文件规范.md)和[提交说明](CONTRIBUTING.md)。
 
 ## 目录结构
 
 ```text
 .
-├── README.md    各实验的总导航
-├── lab1/        开发工具与C++基础
-├── lab2/        ROS与坐标变换
-├── lab3/        无人机轨迹控制
-├── lab4/        无人机控制与竞速
-└── lab5/        无人机视觉特征匹配与跟踪
+├── README.md          五个实验的总入口
+├── docs/              报告索引、阅读路线和文件规范
+├── tools/             仓库导航检查工具
+├── CONTRIBUTING.md    怎样整理文件、怎样写清楚提交备注
+├── CHANGELOG.md       用通俗语言记录主要更新
+├── lab1/              Linux、Git、C++和CMake基础
+├── lab2/              ROS、TF与相对轨迹
+├── lab3/              悬停和圆轨迹跟踪
+├── lab4/              轨迹规划与穿门竞速
+└── lab5/              特征匹配、稀疏跟踪与稠密光流
 ```
 
-| **目录** | **一句话说明** |
-| --- | --- |
-| [lab1](lab1/README.md) | 学会使用工具、写代码和编译程序 |
-| [lab2](lab2/README.md) | 学会描述物体的位置、方向和相对运动 |
-| [lab3](lab3/README.md) | 学会把目标与实际状态结合起来控制无人机 |
-| [lab4](lab4/README.md) | 学会规划并跟踪穿过多个赛门的轨迹 |
-| [lab5](lab5/README.md) | 学会从图像建立对应关系，并比较跟踪方法 |
+各 Lab 的运行目录沿用原项目路径。报告、代码、原始证据和派生分析的对应关系，统一写在[完整资料索引](docs/报告与证据索引.md)中。
 
-## 核心原理通俗讲解
+## 环境怎么选
 
-五个实验依次回答“程序怎样跑起来”“物体在哪里”“怎样让物体按目标运动”“怎样规划并完成穿门赛道”和“怎样从图像建立对应关系”。具体算法、参数、命令和实验结果在各 Lab 的 README 与报告中说明。
+| 实验 | 主要工具 | 一句话说明 |
+| --- | --- | --- |
+| Lab1 | Linux、Git、GCC、CMake | 学会组织源码并编译程序 |
+| Lab2 | ROS、TF、RViz | 用消息和坐标关系描述相对运动 |
+| Lab3 | ROS Noetic、TESSE、几何控制器 | 根据目标和反馈控制旋翼 |
+| Lab4 | ROS Noetic、TESSE Lab4、轨迹优化库 | 规划并跟踪穿过多个赛门的路线 |
+| Lab5 | ROS Noetic、OpenCV 4.2 contrib | 从相邻图像中建立和验证对应关系 |
 
-| **实验** | **复习时抓住什么** |
-| --- | --- |
-| Lab1 | 源文件如何组成程序，修改后怎样重新编译 |
-| Lab2 | 同一个物体换一个参考坐标系后，位置和方向如何变化 |
-| Lab3 | 目标与实际有偏差时，怎样调整旋翼来纠正飞行 |
-| Lab4 | 赛门约束、平滑轨迹、时间采样与真实通关证据如何对应 |
-| Lab5 | 特征、距离比、几何内点与LK假设，怎样共同决定跟踪效果 |
+```bash
+git clone https://github.com/hbyhby123/vnav-personal.git
+cd vnav-personal
+# 接着打开对应 lab*/README.md，按该实验的命令操作。
+```
 
-| **归档信息** | **内容** |
-| --- | --- |
-| 学生 | 黄博宇，24020036026，中外计科一班，第8组 |
-| 说明 | 各 Lab 的任务、完成状态、交付要求与操作方法分别保存在自身目录 |
+只想查看一个实验时，可使用[按需下载方法](docs/阅读与复现路线.md#只下载需要的实验)。
+
+## 最新整理
+
+Lab5 已归档中英文各19页报告、17张编号截图、7张流程或统计图以及完整逐帧记录；每份报告含24幅图和11张表。五个实验的报告与代码入口已统一。
+
+更多更新见[更新记录](CHANGELOG.md)。仓库归档与课程正式提交是不同环节；具体交付状态以各 Lab 的说明和作业平台记录为准。
