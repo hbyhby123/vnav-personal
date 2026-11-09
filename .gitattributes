@@ -10,3 +10,7 @@
 *.mp4 binary
 *.bag binary
 *.zip binary
+
+# Lab6 logs and pose recordings
+lab6/results/logs/** -text -diff
+lab6/**/*.bag binary
