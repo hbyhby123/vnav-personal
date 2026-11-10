@@ -77,3 +77,5 @@ RANSAC 可以理解为反复抽几对匹配来试算，再看哪一次的结果�
 旧 ROS 1 下载链接返回 404，本实验使用 [MIT Office ROS 2 归档](https://drive.google.com/file/d/1TohOnfjR_FKf_y9wYTEkmv-XCuFPFRPt/view)的前段，转换为 ROS 1 后评估。完整数据的下载与转换见[复现脚本说明](scripts/README.md)。可选的 Lab4 RGB-D 补录在深度相机初始化处失败，见[日志](results/logs/capture_bridge.log)。
 
 [返回个人仓库首页](../README.md)
+
+课程已确认更新后的 Office 数据采用 ROS 2 格式。完整录包可用公告指定的 `rosbags==0.11.9` 转为 ROS 1，见[转换命令](scripts/README.md#按课程公告转换完整-office-数据)。
